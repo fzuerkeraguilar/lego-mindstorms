@@ -8,6 +8,8 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.ev3devices import Motor
 from linefollower import LineFollower
+from debug import Debug
+from turning_distance_sensor import TurningDistanceSensor
 
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
@@ -17,10 +19,11 @@ from linefollower import LineFollower
 ev3 = EV3Brick()
 right_motor = Motor(Port.B)
 left_motor = Motor(Port.A)
-# constant_motor = Motor(Port.C)
+distance_drive = Motor(Port.C)
 robot = DriveBase(left_motor, right_motor, wheel_diameter=33, axle_track=185)
 color_sensor = ColorSensor(Port.S1)
 touch_sensor = TouchSensor(Port.S2)
+distance_sensor = TurningDistanceSensor(Port.C, Port.S4)
 
 # Menu to select the program to run
 ev3.screen.load_image(ImageFile.QUESTION_MARK)
@@ -31,22 +34,24 @@ while not any(ev3.buttons.pressed()):
     # Stop the program if the center button is pressed
     if Button.CENTER in ev3.buttons.pressed():
         ev3.speaker.beep()
-        ev3.screen.print("Program stopped")
-        wait(1000)
-        ev3.screen.clear()
+        Debug(robot, color_sensor, touch_sensor, distance_sensor, ev3, right_motor, left_motor, distance_drive, 100).run()
         break
     # Run the program if the left button is pressed
-    elif Button.LEFT in ev3.buttons.pressed():
-        ev3.speaker.beep()
-        LineFollower(robot, color_sensor, touch_sensor).run()
-    # Run the program if the right button is pressed
-    elif Button.RIGHT in ev3.buttons.pressed():
-      ev3.speaker.beep()
-    #   constant_motor.run_time(1000, 100000, wait=True)
-    # Run the program if the up button is pressed
     elif Button.UP in ev3.buttons.pressed():
         ev3.speaker.beep()
-    # Run the program if the down button is pressed
+        LineFollower(robot,right_motor, left_motor, color_sensor, touch_sensor, distance_sensor, ev3).run()
+        break
+    # Run the program if the right button is pressed
+    elif Button.RIGHT in ev3.buttons.pressed():
+        ev3.speaker.beep()
+        break
+    #   constant_motor.run_time(1000, 100000, wait=True)
+    # Run the program if the up button is pressed
     elif Button.DOWN in ev3.buttons.pressed():
         ev3.speaker.beep()
+        break
+    # Run the program if the down button is pressed
+    elif Button.LEFT in ev3.buttons.pressed():
+        ev3.speaker.beep()
+        break
 
