@@ -4,18 +4,15 @@ from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor, GyroSensor
 
 
-class BridgeCrosser:
+class BridgeCrosser(Mode):
 
     RAMP_ANGLE = 15
+    INITIAL_SPEED = 50
 
-
-    def __init__(self, drivebase, color_sensor, touch_sensor, gyro_sensor, speed=100):
-        self.drivebase = drivebase
-        self.color_sensor = color_sensor
-        self.touch_sensor = touch_sensor
-        self.gyro_sensor = gyro_sensor
-        self.speed = speed
-        self.gyro_sensor.reset_angle(0)
+    def __init__(self, ev3_hub, drivebase, color_sensor, distance_sensor,
+    speed=self.INITIAL_SPEED):
+        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
 
     def run(self):
+        pass
         

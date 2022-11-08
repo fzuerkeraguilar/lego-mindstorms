@@ -1,12 +1,11 @@
 from pybricks.hubs import EV3Brick
 from pybricks.parameters import Color, Stop, Button
 from pybricks.robotics import DriveBase
-from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
-                                    InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.ev3devices import Motor, TouchSensor, ColorSensor, UltrasonicSensor
 from pybricks.tools import wait
 
 
-class LineFollower:
+class LineFollower(Mode):
     BLACK = 6
     WHITE = 42
     THRESHOLD = (BLACK + WHITE) / 2
@@ -19,17 +18,13 @@ class LineFollower:
     INITIAL_TURN = 50
     END_COLOR = Color.BLUE
 
-    def __init__(self, drivebase, right_motor, left_motor, color_sensor, touch_sensor, distance_sensor, hub, speed=self.INITIAL_SPEED):
-        self.drivebase = drivebase
+    def __init__(self, ev3_hub, drivebase, right_motor, left_motor,
+    color_sensor, distance_sensor, speed=self.INITIAL_SPEED):
+        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
         self.right_motor = right_motor
         self.left_motor = left_motor
-        self.color_sensor = color_sensor
-        self.touch_sensor = touch_sensor
-        self.distance_sensor = distance_sensor
-        self.speed = speed
-        self.hub = hub
 
-    # TODO: Switch from reflection to rgb to detect the blue marker
+    #TODO: Switch from reflection to rgb to detect the blue marker
     def follow_line(self):
         if self.distance_sensor.distance() < 100:
                 self.avoid_obstacle()

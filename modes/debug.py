@@ -7,16 +7,13 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 
-class Debug:
+class Debug(Mode):
 
-    def __init__(self, drivebase, color_sensor, touch_sensor, distance_sensor, hub, right_motor, left_motor, distance_drive, speed=100):
-        self.drivebase = drivebase
-        self.color_sensor = color_sensor
+    def __init__(self, ev3_hub, drivebase, right_motor, left_motor,
+    color_sensor, touch_sensor, distance_sensor, distance_drive, speed=100):
+        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
         self.touch_sensor = touch_sensor
-        self.distance_sensor = distance_sensor
-        self.hub = hub
         self.distance_drive = distance_drive
-        self.speed = speed
         self.right_motor = right_motor
         self.left_motor = left_motor
 
