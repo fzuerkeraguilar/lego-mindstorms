@@ -15,10 +15,10 @@ class Main:
 
     def __init__(self):
         self.ev3 = EV3Brick()
-        self.right_motor = Motor(Port.B)
-        self.left_motor = Motor(Port.A)
+        self.r_motor = Motor(Port.B)
+        self.l_motor = Motor(Port.A)
         self.distance_drive = Motor(Port.C)
-        self.drive_base = DriveBase(left_motor, right_motor, wheel_diameter=33, axle_track=185)
+        self.drive_base = DriveBase(self.l_motor, self.r_motor, wheel_diameter=33, axle_track=185)
         self.color_sensor = ColorSensor(Port.S1)
         self.r_touch_sensor = TouchSensor(Port.S2)
         self.l_touch_sensor = TouchSensor(Port.S3)
@@ -26,33 +26,43 @@ class Main:
 
     def main():
         # Menu to select the program to run
-        ev3.screen.load_image(ImageFile.QUESTION_MARK)
-        ev3.speaker.beep()
-        # Wait for a button to be pressed
-        while not any(ev3.buttons.pressed()):
-            wait(10)
-            if Button.CENTER in ev3.buttons.pressed():
-                ev3.speaker.beep()
-                Debug(self.drive_base, self.color_sensor, self.r_touch_sensor, self.distance_sensor, self.ev3,
-                    self.right_motor, self.left_motor, self.distance_drive).run()
-                break
+        options = ["Line Follower", "Box Pusher", "Bridge Crosser", "Point Finder", "Debug"]
+        option = 0
 
-            elif Button.UP in ev3.buttons.pressed():
-                ev3.speaker.beep()
-                LineFollower(self.drive_base, self.right_motor, self.left_motor, self.color_sensor, self.r_touch_sensor, self.distance_sensor, self.ev3).run()
+        self.ev3.screen.clear()
+        self.ev3.screen.print("Select a program to run:")
+        self.ev3.screen.print(options[option])
+        while True:
+            if Button.UP in self.ev3.buttons.pressed():
+                option = (option - 1) % len(options)
+                self.ev3.screen.clear()
+                self.ev3.screen.print("Select a program to run:")
+                self.ev3.screen.print(options[option])
+            elif Button.DOWN in self.ev3.buttons.pressed():
+                option = (option + 1) % len(options)
+                self.ev3.screen.clear()
+                self.ev3.screen.print("Select a program to run:")
+                self.ev3.screen.print(options[option])
+            elif Button.RIGHT in self.ev3.buttons.pressed():
+                self.ev3.screen.clear()
+                self.ev3.screen.print("Running " + options[option])
+                if option == 0:
+                    LineFollower(self.ev3, self.drivebase, self.r_motor, self.l_motor, self.color_sensor, self.distance_sensor).run()
+                elif option == 1:
+                    BoxPusher(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor, self.r_touch_sensor).run()
+                elif option == 2:
+                    BridgeCrosser(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor).run()
+                elif option == 3:
+                    PointFinder(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor).run()
+                elif option == 4:
+                    Debug(self.ev3, self.drivebase, self.r_motor, self.l_motor,
+                    self.color_sensor, self.r_touch_sensor, self.distance_sensor, self.distance_drive).run()
+                self.ev3.screen.clear()
+                self.ev3.screen.print("Select a program to run:")
+                self.ev3.screen.print(options[option])
+            elif Button.CENTER in self.ev3.buttons.pressed():
                 break
-
-            elif Button.RIGHT in ev3.buttons.pressed():
-                ev3.speaker.beep()
-                break
-
-            elif Button.DOWN in ev3.buttons.pressed():
-                ev3.speaker.beep()
-                break
-
-            elif Button.LEFT in ev3.buttons.pressed():
-                ev3.speaker.beep()
-                break
+                
 
 if __name__ == "__main__":
     Main().main()
