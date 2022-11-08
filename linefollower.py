@@ -10,14 +10,16 @@ class LineFollower:
     BLACK = 6
     WHITE = 42
     THRESHOLD = (BLACK + WHITE) / 2
-
     GAIN = 3
+
+    INITIAL_SPEED = 50
+    TOP_SPEED = 80
     STEP_SIZE = 14
     WAIT_TIME = 5
     INITIAL_TURN = 50
     END_COLOR = Color.BLUE
 
-    def __init__(self, drivebase, right_motor, left_motor, color_sensor, touch_sensor, distance_sensor, hub, speed=30):
+    def __init__(self, drivebase, right_motor, left_motor, color_sensor, touch_sensor, distance_sensor, hub, speed=self.INITIAL_SPEED):
         self.drivebase = drivebase
         self.right_motor = right_motor
         self.left_motor = left_motor
@@ -30,30 +32,26 @@ class LineFollower:
 
     def follow_line(self):
         while True:
-            # if self.color_sensor.color() == self.END_COLOR:
-            #     self.drivebase.stop()
-            #     self.hub.speaker.beep()
-            #     break
 
             if self.distance_sensor.distance() < 100:
                 self.avoid_obstacle()
 
             # Calculate the deviation from the threshold.
             reflection = self.color_sensor.reflection()
+            deviation = reflection - self.THRESHOLD
+
             if reflection <= self.BLACK + 3:
-                self.speed = 30
+                self.speed = self.INITIAL_SPEED
                 if not self.find_line():
                     self.hub.speaker.beep(duration=1000)
                     self.drivebase.straight(150)
-            self.speed = min(80, self.speed + 1)
 
-            deviation = reflection - self.THRESHOLD
+            self.speed = min(self.TOP_SPEED, self.speed + 1)
             if abs(deviation) > 7:
-                self.speed = 30
+                self.speed = self.INITIAL_SPEED
 
             turn_rate = self.GAIN * deviation
             self.hub.screen.print(deviation)
-
             self.drivebase.drive(self.speed, turn_rate)
     
     def avoid_obstacle(self):
