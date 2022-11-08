@@ -1,5 +1,5 @@
 from pybricks.hubs import EV3Brick
-from pybricks.parameters import Color, Stop
+from pybricks.parameters import Color, Stop, Button
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                     InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -31,9 +31,7 @@ class LineFollower:
 
 
     def follow_line(self):
-        while True:
-
-            if self.distance_sensor.distance() < 100:
+        if self.distance_sensor.distance() < 100:
                 self.avoid_obstacle()
 
             # Calculate the deviation from the threshold.
@@ -119,5 +117,6 @@ class LineFollower:
         return False
 
     def run(self):
-        self.follow_line()
+        while Button.CENTER not in self.hub.buttons.pressed():
+            self.follow_line()
         
