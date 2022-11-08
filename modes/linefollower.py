@@ -29,7 +29,7 @@ class LineFollower:
         self.speed = speed
         self.hub = hub
 
-
+    # TODO: Switch from reflection to rgb to detect the blue marker
     def follow_line(self):
         if self.distance_sensor.distance() < 100:
                 self.avoid_obstacle()

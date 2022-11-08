@@ -3,7 +3,7 @@ from pybricks.parameters import Color
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor, GyroSensor
 
-class PointFinder:
+class PointFinder (Mode):
 
     def __init__(self):
         self.ev3 = EV3Brick()

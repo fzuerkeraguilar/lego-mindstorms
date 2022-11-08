@@ -7,8 +7,8 @@ from pybricks.tools import wait
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import ImageFile
 
-from linefollower import LineFollower
-from debug import Debug
+from modes.linefollower import LineFollower
+from modes.debug import Debug
 from turning_distance_sensor import TurningDistanceSensor
 
 class Main:
