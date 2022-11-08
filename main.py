@@ -26,7 +26,7 @@ class Main:
 
     def main():
         # Menu to select the program to run
-        options = ["Line Follower", "Box Pusher", "Bridge Crosser", "Point Finder", "Debug"]
+        options = ["Line Follower", "Box Pusher", "Bridge Crosser", "Point Finder", "Complete Run", "Debug"]
         option = 0
 
         self.ev3.screen.clear()
@@ -55,6 +55,11 @@ class Main:
                 elif option == 3:
                     PointFinder(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor).run()
                 elif option == 4:
+                    LineFollower(self.ev3, self.drivebase, self.r_motor, self.l_motor, self.color_sensor, self.distance_sensor).run()
+                    BoxPusher(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor, self.r_touch_sensor).run()
+                    BridgeCrosser(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor).run()
+                    PointFinder(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor).run()
+                elif option == 5:
                     Debug(self.ev3, self.drivebase, self.r_motor, self.l_motor,
                     self.color_sensor, self.r_touch_sensor, self.distance_sensor, self.distance_drive).run()
                 self.ev3.screen.clear()
