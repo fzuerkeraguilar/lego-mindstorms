@@ -15,10 +15,8 @@ class TurningDistanceSensor:
         if angle > 90 or angle < -90:
             raise ValueError("Angle must be between -90 and 90 degrees")
         self.turn_motor.run_angle(self.speed, angle, wait=True)
-        wait(50)
         distance = self.ultrasonic_sensor.distance()
         self.turn_motor.run_angle(self.speed, -angle, wait=True)
-        wait(50)
         return distance
 
     def run_target(self, target_angle, wait=True):
