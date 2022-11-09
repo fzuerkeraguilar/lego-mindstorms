@@ -51,7 +51,7 @@ class Main:
                 if option == 0:
                     LineFollower(self.ev3, self.drivebase, self.r_motor, self.l_motor, self.color_sensor, self.distance_sensor).run()
                 elif option == 1:
-                    BoxPusher(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor, self.r_touch_sensor).run()
+                    BoxPusher(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor, self.r_touch_sensor, self.r_motor, self.l_motor).run()
                 elif option == 2:
                     BridgeCrosser(self.ev3, self.drivebase, self.color_sensor, self.distance_sensor).run()
                 elif option == 3:
