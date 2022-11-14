@@ -61,15 +61,20 @@ class BoxPusher(Mode):
         self.distance_sensor.measure_angle(this.LEFT)
         self.drive_guided_straight(60)
         
-    def drive_guided_straight(self, run_cycles, speed = self.INITIAL_SPEED, bias = self.DISTANCE_BIAS):
-        "Drive straight for run_cycles with guidance from the distance sensor"
+    def drive_guided_straight(self, motor_cycles, speed = self.INITIAL_SPEED, bias = self.DISTANCE_BIAS):
+        "Drive straight for motor_cycles with guidance from the distance sensor"
         self.drivebase.stop()
+
         wall_distance = self.distance_sensor.distance()
         left_speed = speed
         right_speed = speed
-        cycle = 0
+
+        # use motor angle to detect driven length
+        self.left_motor.reset_angle(0)
+        self.right_motor.reset_angle(0)
+        target_angle = motor_cycles * 360
         
-        while cycle < run_cycles:
+        while self.left_motor.angle() < target_angle:
             self.left_motor.run(speed)
             self.right_motor.run(speed)
 
@@ -87,7 +92,6 @@ class BoxPusher(Mode):
                 left_speed = speed
                 right_speed = speed
             
-            cycle = cycle + 1
             wait(10)
 
         self.left_motor.stop()
@@ -105,7 +109,7 @@ class BoxPusher(Mode):
 
         self.drivebase.stop()
         self.right_motor.run(speed)
-        self.left_motor.run_time(speed)
+        self.left_motor.run(speed)
 
         while (self.right_motor.speed() != 0 and self.left_motor.speed() != 0):
             if self.distance_sensor.distance() - threshold_distance < 0:
