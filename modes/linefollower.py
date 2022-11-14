@@ -13,7 +13,7 @@ class LineFollower(Mode):
 
     INITIAL_SPEED = 50
     TOP_SPEED = 80
-    STEP_SIZE = 14
+    STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
     END_COLOR = Color.BLUE
@@ -36,7 +36,7 @@ class LineFollower(Mode):
         if reflection <= self.BLACK + 3:
             self.speed = self.INITIAL_SPEED
             if not self.find_line_direct():
-                self.hub.speaker.beep(duration=1000)
+                self.hub.speaker.beep(frequency=10000)
                 self.drivebase.straight(150)
 
         self.speed = min(self.TOP_SPEED, self.speed + 1)
@@ -44,7 +44,6 @@ class LineFollower(Mode):
             self.speed = self.INITIAL_SPEED
 
         turn_rate = self.GAIN * deviation
-        self.hub.screen.print(deviation)
         self.drivebase.drive(self.speed, turn_rate)
     
     def avoid_obstacle(self):
@@ -62,33 +61,41 @@ class LineFollower(Mode):
 
         self.hub.speaker.beep()
         self.drivebase.stop()
+        self.hub.screen.print("Turn left")
         self.right_motor.run_time(500, 1300, then=Stop.BRAKE, wait=False)
         self.left_motor.run_time(-500, 1300, then=Stop.BRAKE, wait=False)
+        wait(80)
         while (self.right_motor.speed() != 0 and self.left_motor.speed() != 0):
-            if self.color_sensor.reflection() > self.THRESHOLD + 3:
+            if self.color_sensor.reflection() > self.THRESHOLD:
+                self.hub.screen.print("Found line 1")
                 self.right_motor.stop()
                 self.left_motor.stop()
                 return True
             pass 
-        self.right_motor.stop()
-        self.left_motor.stop()
-
-        self.right_motor.run_time(-500, 1300, then=Stop.BRAKE, wait=False)
-        self.left_motor.run_time(500, 1300, then=Stop.BRAKE, wait=False)
+        
+        self.hub.screen.print("Turn right")
+        self.right_motor.run_time(-500, 2600, then=Stop.BRAKE, wait=False)
+        self.left_motor.run_time(500, 2600, then=Stop.BRAKE, wait=False)
+        wait(80)
         while (self.right_motor.speed() != 0 and self.left_motor.speed() != 0):
-            if self.color_sensor.reflection() > self.THRESHOLD + 3:
+            if self.color_sensor.reflection() > self.THRESHOLD:
+                self.hub.screen.print("Found line 2")
                 self.right_motor.stop()
                 self.left_motor.stop()
                 return True
             pass
-        self.right_motor.stop()
-        self.left_motor.stop() 
+        self.hub.screen.print("Turn back")
+        wait(80)
+        self.right_motor.run_time(500, 1300, then=Stop.BRAKE, wait=False)
+        self.left_motor.run_time(-500, 1300, then=Stop.BRAKE, wait=True)
         return False
 
-    def find_line_drivebase():
+    def find_line_drivebase(self):
+        self.drivebase.stop()
+        self.hub.screen.print(self.drivebase.heading_control.pid())
+        self.hub.screen.print(self.drivebase.heading_control.limits())
         degrees = 0
 
-        self.hub.speaker.beep()
         while degrees < self.INITIAL_TURN:
             self.drivebase.turn(self.STEP_SIZE)
             degrees += self.STEP_SIZE
@@ -98,6 +105,7 @@ class LineFollower(Mode):
         degrees = 0
         while degrees > -90:
             self.drivebase.turn(-self.STEP_SIZE)
+            degrees -= self.STEP_SIZE
             if self.color_sensor.reflection() > self.THRESHOLD + 3:
                 return True
         self.drivebase.turn(90)
