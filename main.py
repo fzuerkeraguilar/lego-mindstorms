@@ -7,6 +7,7 @@ from pybricks.tools import wait
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import ImageFile
 
+from modes.mode import Mode
 from modes.linefollower import LineFollower
 from modes.debug import Debug
 from turning_distance_sensor import TurningDistanceSensor
@@ -18,13 +19,13 @@ class Main:
         self.r_motor = Motor(Port.B)
         self.l_motor = Motor(Port.A)
         self.distance_drive = Motor(Port.C)
-        self.drive_base = DriveBase(self.l_motor, self.r_motor, wheel_diameter=33, axle_track=185)
+        self.drivebase = DriveBase(self.l_motor, self.r_motor, wheel_diameter=33, axle_track=185)
         self.color_sensor = ColorSensor(Port.S1)
         self.r_touch_sensor = TouchSensor(Port.S2)
         self.l_touch_sensor = TouchSensor(Port.S3)
         self.distance_sensor = TurningDistanceSensor(Port.C, Port.S4)
 
-    def main():
+    def main(self):
         # Menu to select the program to run
         options = ["Line Follower", "Box Pusher", "Bridge Crosser", "Point Finder", "Complete Run", "Debug"]
         option = 0
@@ -33,6 +34,7 @@ class Main:
         self.ev3.screen.print("Select a program to run:")
         self.ev3.screen.print(options[option])
         while True:
+            wait(50)
             if Button.UP in self.ev3.buttons.pressed():
                 option = (option - 1) % len(options)
                 self.ev3.screen.clear()

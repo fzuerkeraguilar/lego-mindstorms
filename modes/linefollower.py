@@ -3,7 +3,7 @@ from pybricks.parameters import Color, Stop, Button
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import Motor, TouchSensor, ColorSensor, UltrasonicSensor
 from pybricks.tools import wait
-
+from modes.mode import Mode
 
 class LineFollower(Mode):
     BLACK = 6
@@ -19,7 +19,7 @@ class LineFollower(Mode):
     END_COLOR = Color.BLUE
 
     def __init__(self, ev3_hub, drivebase, right_motor, left_motor,
-    color_sensor, distance_sensor, speed=self.INITIAL_SPEED):
+    color_sensor, distance_sensor, speed=INITIAL_SPEED):
         super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
         self.right_motor = right_motor
         self.left_motor = left_motor
@@ -29,23 +29,23 @@ class LineFollower(Mode):
         if self.distance_sensor.distance() < 100:
                 self.avoid_obstacle()
 
-            # Calculate the deviation from the threshold.
-            reflection = self.color_sensor.reflection()
-            deviation = reflection - self.THRESHOLD
+        # Calculate the deviation from the threshold.
+        reflection = self.color_sensor.reflection()
+        deviation = reflection - self.THRESHOLD
 
-            if reflection <= self.BLACK + 3:
-                self.speed = self.INITIAL_SPEED
-                if not self.find_line_direct():
-                    self.hub.speaker.beep(duration=1000)
-                    self.drivebase.straight(150)
+        if reflection <= self.BLACK + 3:
+            self.speed = self.INITIAL_SPEED
+            if not self.find_line_direct():
+                self.hub.speaker.beep(duration=1000)
+                self.drivebase.straight(150)
 
-            self.speed = min(self.TOP_SPEED, self.speed + 1)
-            if abs(deviation) > 7:
-                self.speed = self.INITIAL_SPEED
+        self.speed = min(self.TOP_SPEED, self.speed + 1)
+        if abs(deviation) > 7:
+            self.speed = self.INITIAL_SPEED
 
-            turn_rate = self.GAIN * deviation
-            self.hub.screen.print(deviation)
-            self.drivebase.drive(self.speed, turn_rate)
+        turn_rate = self.GAIN * deviation
+        self.hub.screen.print(deviation)
+        self.drivebase.drive(self.speed, turn_rate)
     
     def avoid_obstacle(self):
         self.drivebase.stop()

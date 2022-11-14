@@ -5,6 +5,7 @@ from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.media.ev3dev import SoundFile, ImageFile
+from modes.mode import Mode
 
 
 class Debug(Mode):
@@ -18,12 +19,17 @@ class Debug(Mode):
         self.left_motor = left_motor
 
     def run(self):
-        self.right_motor.reset_angle(0)
-        self.left_motor.reset_angle(0)
-        self.right_motor.run_time(600, 1300, then=Stop.BRAKE, wait=False)
-        self.left_motor.run_time(-600, 1300, then=Stop.BRAKE, wait=False)
+        # self.right_motor.reset_angle(0)
+        # self.left_motor.reset_angle(0)
+        # self.right_motor.run_time(600, 1300, then=Stop.BRAKE, wait=False)
+        # self.left_motor.run_time(-600, 1300, then=Stop.BRAKE, wait=False)
+
+        self.hub.screen.print("Heading control")
+        self.hub.screen.print(self.drivebase.heading_control.pid())
+        self.hub.screen.print("Distance control")
+        self.hub.screen.print(self.drivebase.distance_control.pid())
         while True:
-            pass
+            wait(100)
     
         # while Button.UP not in self.hub.buttons.pressed():
         #     # direction = 1

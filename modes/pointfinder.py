@@ -2,6 +2,8 @@ from pybricks.hubs import EV3Brick
 from pybricks.parameters import Color
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor, GyroSensor
+from modes.mode import Mode
+
 
 class PointFinder (Mode):
     INITIAL_SPEED = 50
