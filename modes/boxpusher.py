@@ -15,7 +15,7 @@ class BoxPusher(Mode):
     RIGHT = 90
 
     def __init__(self, ev3_hub, drivebase,
-    color_sensor, distance_sensor, touch_sensor, right_motor, left_motor, speed=self.INITIAL_SPEED):
+    color_sensor, distance_sensor, touch_sensor, right_motor, left_motor, speed=INITIAL_SPEED):
         super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
         self.left_motor = left_motor
         self.right_motor = right_motor
@@ -26,12 +26,16 @@ class BoxPusher(Mode):
         self.find_end_pos()
 
     def find_start_pos(self):
-        self.distance_sensor.measure_angle(this.LEFT)
-        self.drive_guided_straight(50)
+        self.hub.screen.print("find start pos")
+        self.hub.speaker.beep()
+        self.distance_sensor.set_angle(self.LEFT)
+        self.drive_guided_straight(5)
 
     def push_box(self):
+        self.hub.screen.print("push box")
+        self.hub.speaker.beep()
         # find the box
-        self.distance_sensor.measure_angle(this.RIGHT)
+        self.distance_sensor.set_angle(self.RIGHT)
         self.drive_until_box_found(self.THRESHOLD_DISTANCE, overshoot_time=20)
         self.drivebase.turn(90)
 
@@ -42,7 +46,7 @@ class BoxPusher(Mode):
         self.drivebase.turn(90)
 
         # drive behind the box
-        self.distance_sensor.measure_angle(this.LEFT)
+        self.distance_sensor.set_angle(self.LEFT)
         self.drive_until_box_lost(self.THRESHOLD_DISTANCE, overshoot_time=20)
         self.drivebase.turn(-90)
 
@@ -55,15 +59,20 @@ class BoxPusher(Mode):
 
 
     def find_end_pos(self):
+        self.hub.screen.print("find end pos")
+        self.hub.speaker.beep()
         self.drivebase.straight(-50)
         self.drivebase.turn(-90)
         self.drive_until_line()
         self.drivebase.turn(-90)
-        self.distance_sensor.measure_angle(this.LEFT)
+        self.distance_sensor.set_angle(self.LEFT)
         self.drive_guided_straight(60)
         
-    def drive_guided_straight(self, motor_cycles, speed = self.INITIAL_SPEED, bias = self.DISTANCE_BIAS):
+    def drive_guided_straight(self, motor_cycles, speed = INITIAL_SPEED, bias = DISTANCE_BIAS):
         "Drive straight for motor_cycles with guidance from the distance sensor"
+        self.hub.screen.print("guided straight")
+        self.hub.speaker.beep()
+
         self.drivebase.stop()
 
         wall_distance = self.distance_sensor.distance()
@@ -79,7 +88,7 @@ class BoxPusher(Mode):
             self.left_motor.run(speed)
             self.right_motor.run(speed)
 
-            current_distance = self.distance_sensor.read()
+            current_distance = self.distance_sensor.distance()
             if (current_distance > wall_distance + bias):
                 # steer left
                 left_speed = speed - 3
@@ -98,8 +107,12 @@ class BoxPusher(Mode):
         self.left_motor.stop()
         self.right_motor.stop()
 
-    def drive_until_line(self, speed=self.INITIAL_SPEED):
+    def drive_until_line(self, speed=INITIAL_SPEED):
         "Drive forward until a white line is found"
+
+        self.hub.screen.print("until line")
+        self.hub.speaker.beep()
+
         self.drivebase.drive(speed, 0)
         while self.color_sensor.reflect() < self.WHITE:
             pass
@@ -110,6 +123,9 @@ class BoxPusher(Mode):
         "Positive threshold to detect objects entering the view, negative for objects leaving."
         if self.distance_sensor.distance() - threshold_distance < 0:
             return
+
+        self.hub.screen.print("until threshold")
+        self.hub.speaker.beep()
 
         self.drivebase.stop()
         self.right_motor.run(speed)
@@ -123,11 +139,11 @@ class BoxPusher(Mode):
                 return
 
 
-    def drive_until_box_found(self, threshold_distance, speed = self.INITIAL_SPEED, overshoot_time = 0):
+    def drive_until_box_found(self, threshold_distance, speed = INITIAL_SPEED, overshoot_time = 0):
         "Drive forward until an object nearer than threshold_distance is detected. Then keep driving for overshoot_time"
-        self.drive_until_threshold_met(self, threshold_distance, speed, overshoot_time)
+        self.drive_until_threshold_met(threshold_distance, speed, overshoot_time)
         
 
-    def drive_until_box_lost(self, threshold_distance, speed = self.INITIAL_SPEED, overshoot_time = 0):
+    def drive_until_box_lost(self, threshold_distance, speed = INITIAL_SPEED, overshoot_time = 0):
         "Drive forward until an object nearer than threshold_distance is not detected anymore. Then keep driving for overshoot_time"
-        self.drive_until_threshold_met(self, -threshold_distance, speed, overshoot_time)
+        self.drive_until_threshold_met(-threshold_distance, speed, overshoot_time)

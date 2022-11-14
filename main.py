@@ -9,6 +9,7 @@ from pybricks.media.ev3dev import ImageFile
 
 from modes.mode import Mode
 from modes.linefollower import LineFollower
+from modes.boxpusher import BoxPusher
 from modes.debug import Debug
 from turning_distance_sensor import TurningDistanceSensor
 
