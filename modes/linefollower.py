@@ -61,6 +61,7 @@ class LineFollower(Mode):
 
         self.hub.speaker.beep()
         self.drivebase.stop()
+        self.hub.screen.print("Turn left")
         self.right_motor.run_time(500, 1300, then=Stop.BRAKE, wait=False)
         self.left_motor.run_time(-500, 1300, then=Stop.BRAKE, wait=False)
         wait(80)
