@@ -11,8 +11,8 @@ class LineFollower(Mode):
     THRESHOLD = (BLACK + WHITE) / 2
     GAIN = 3
 
-    INITIAL_SPEED = 50
-    TOP_SPEED = 80
+    INITIAL_SPEED = 60
+    TOP_SPEED = 90
     STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
@@ -24,7 +24,6 @@ class LineFollower(Mode):
         self.right_motor = right_motor
         self.left_motor = left_motor
 
-    #TODO: Switch from reflection to rgb to detect the blue marker
     def follow_line(self):
         if self.distance_sensor.distance() < 100:
                 self.avoid_obstacle()
