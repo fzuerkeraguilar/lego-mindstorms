@@ -2,7 +2,7 @@ from pybricks.hubs import EV3Brick
 from pybricks.parameters import Color, Stop, Button
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import Motor, TouchSensor, ColorSensor, UltrasonicSensor
-from pybricks.tools import wait
+from pybricks.tools import wait, StopWatch
 from modes.mode import Mode
 
 class LineFollower(Mode):
@@ -32,7 +32,12 @@ class LineFollower(Mode):
         # Calculate the deviation from the threshold.
         reflection = self.color_sensor.reflection()
         deviation = reflection - self.THRESHOLD
-
+        rgb = self.color_sensor.rgb()
+        if rgb[0] < 10 and rgb[1] < 30 and rgb[2] > 25:
+            self.hub.speaker.beep()
+            self.drivebase.stop()
+            return True
+        
         if reflection <= self.BLACK + 3:
             self.speed = self.INITIAL_SPEED
             if not self.find_line_direct():
@@ -45,13 +50,14 @@ class LineFollower(Mode):
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
+        return False
     
     def avoid_obstacle(self):
         self.drivebase.stop()
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(300)
+        self.drivebase.straight(400)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
@@ -59,33 +65,38 @@ class LineFollower(Mode):
     
     def find_line_direct(self):
 
+        watch = StopWatch()
+        watch.pause()
+        watch.reset()
+
         self.hub.speaker.beep()
         self.drivebase.stop()
         self.hub.screen.print("Turn left")
-        self.right_motor.run_time(500, 1300, then=Stop.BRAKE, wait=False)
-        self.left_motor.run_time(-500, 1300, then=Stop.BRAKE, wait=False)
-        wait(80)
-        while (self.right_motor.speed() != 0 and self.left_motor.speed() != 0):
-            if self.color_sensor.reflection() > self.THRESHOLD:
+        self.right_motor.run_time(500, 1300, then=Stop.HOLD, wait=False)
+        self.left_motor.run_time(-500, 1300, then=Stop.HOLD, wait=False)
+        watch.resume()
+        while watch.time() < 1400:
+            if self.color_sensor.reflection() > self.THRESHOLD + 3:
                 self.hub.screen.print("Found line 1")
                 self.right_motor.stop()
                 self.left_motor.stop()
                 return True
             pass 
         
-        self.right_motor.run_time(-500, 2600, then=Stop.BRAKE, wait=False)
-        self.left_motor.run_time(500, 2600, then=Stop.BRAKE, wait=False)
-        wait(80)
-        while (self.right_motor.speed() != 0 and self.left_motor.speed() != 0):
-            if self.color_sensor.reflection() > self.THRESHOLD:
+        self.hub.screen.print("Turn right")
+        self.right_motor.run_time(-500, 2600, then=Stop.HOLD, wait=False)
+        self.left_motor.run_time(500, 2600, then=Stop.HOLD, wait=False)
+        watch.reset()
+        while watch.time() < 2700:
+            if self.color_sensor.reflection() > self.THRESHOLD + 3:
                 self.hub.screen.print("Found line 2")
                 self.right_motor.stop()
                 self.left_motor.stop()
                 return True
             pass
-        wait(80)
-        self.right_motor.run_time(500, 1300, then=Stop.BRAKE, wait=False)
-        self.left_motor.run_time(-500, 1300, then=Stop.BRAKE, wait=True)
+        
+        self.right_motor.run_time(500, 1400, then=Stop.HOLD, wait=False)
+        self.left_motor.run_time(-500, 1400, then=Stop.HOLD, wait=True)
         return False
 
     def find_line_drivebase(self):
@@ -119,5 +130,7 @@ class LineFollower(Mode):
 
     def run(self):
         while Button.CENTER not in self.hub.buttons.pressed():
-            self.follow_line()
+            if self.follow_line():
+                break
+            
         

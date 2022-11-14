@@ -24,11 +24,10 @@ class Debug(Mode):
         # self.right_motor.run_time(600, 1300, then=Stop.BRAKE, wait=False)
         # self.left_motor.run_time(-600, 1300, then=Stop.BRAKE, wait=False)
 
-        self.hub.screen.print("Heading control")
-        self.hub.screen.print(self.drivebase.heading_control.pid())
-        self.hub.screen.print("Distance control")
-        self.hub.screen.print(self.drivebase.distance_control.pid())
+        
         while True:
+            self.hub.screen.print(self.color_sensor.rgb())
+            self.hub.screen.print(self.color_sensor.reflection())
             wait(100)
     
         # while Button.UP not in self.hub.buttons.pressed():
