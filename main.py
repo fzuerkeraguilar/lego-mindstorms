@@ -23,7 +23,7 @@ class Main:
         self.drivebase = DriveBase(self.l_motor, self.r_motor, wheel_diameter=33, axle_track=185)
         self.color_sensor = ColorSensor(Port.S1)
         self.r_touch_sensor = TouchSensor(Port.S2)
-        self.l_touch_sensor = TouchSensor(Port.S3)
+        # self.l_touch_sensor = TouchSensor(Port.S3)
         self.distance_sensor = TurningDistanceSensor(Port.C, Port.S4)
 
     def main(self):
@@ -35,7 +35,7 @@ class Main:
         self.ev3.screen.print("Select a program to run:")
         self.ev3.screen.print(options[option])
         while True:
-            wait(50)
+            wait(100)
             if Button.UP in self.ev3.buttons.pressed():
                 option = (option - 1) % len(options)
                 self.ev3.screen.clear()

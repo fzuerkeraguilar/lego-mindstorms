@@ -7,12 +7,13 @@ from pybricks.tools import wait
 
 class BoxPusher(Mode):
     WHITE = 42
-    INITIAL_SPEED = 50
-    DISTANCE_BIAS = 3
+    INITIAL_SPEED = 100
+    CORRECTION_SPEED = 5
+    DISTANCE_BIAS = 5
     THRESHOLD_DISTANCE = 20
-    LEFT = -90
+    RIGHT = -90
     CENTER = 0
-    RIGHT = 90
+    LEFT = 90
 
     def __init__(self, ev3_hub, drivebase,
     color_sensor, distance_sensor, touch_sensor, right_motor, left_motor, speed=INITIAL_SPEED):
@@ -28,8 +29,9 @@ class BoxPusher(Mode):
     def find_start_pos(self):
         self.hub.screen.print("find start pos")
         self.hub.speaker.beep()
+        self.drivebase.straight(50)
         self.distance_sensor.set_angle(self.LEFT)
-        self.drive_guided_straight(5)
+        self.drive_guided_straight(10)
 
     def push_box(self):
         self.hub.screen.print("push box")
@@ -73,34 +75,39 @@ class BoxPusher(Mode):
         self.hub.screen.print("guided straight")
         self.hub.speaker.beep()
 
-        self.drivebase.stop()
-
         wall_distance = self.distance_sensor.distance()
-        left_speed = speed
-        right_speed = speed
+        turn_rate = 0
 
         # use motor angle to detect driven length
-        self.left_motor.reset_angle(0)
-        self.right_motor.reset_angle(0)
+        # self.left_motor.reset_angle(0)
+        # self.right_motor.reset_angle(0)
         target_angle = motor_cycles * 360
         
         while self.left_motor.angle() < target_angle:
-            self.left_motor.run(speed)
-            self.right_motor.run(speed)
+            # self.left_motor.run(speed)
+            # self.right_motor.run(speed)
+            self.drivebase.drive(speed, turn_rate)
 
             current_distance = self.distance_sensor.distance()
+            self.hub.screen.print(turn_rate)
             if (current_distance > wall_distance + bias):
                 # steer left
-                left_speed = speed - 3
-                right_speed = speed
+                self.hub.screen.print("left")
+                # left_speed = speed - self.CORRECTION_SPEED
+                # right_speed = speed + self.CORRECTION_SPEED
+                turn_rate = turn_rate - self.CORRECTION_SPEED
             elif (current_distance < wall_distance - bias):
                 # steer right
-                left_speed = speed
-                right_speed = speed - 3
+                self.hub.screen.print("right")
+                # left_speed = speed + self.CORRECTION_SPEED
+                # right_speed = speed - self.CORRECTION_SPEED
+                turn_rate = turn_rate + self.CORRECTION_SPEED
             else:
                 # steer clear
-                left_speed = speed
-                right_speed = speed
+                self.hub.screen.print("straight")
+                # left_speed = speed
+                # right_speed = speed
+                turn_rate = 0
             
             wait(10)
 
@@ -114,7 +121,7 @@ class BoxPusher(Mode):
         self.hub.speaker.beep()
 
         self.drivebase.drive(speed, 0)
-        while self.color_sensor.reflect() < self.WHITE:
+        while self.color_sensor.reflection() < self.WHITE:
             pass
         self.drivebase.stop()
 
