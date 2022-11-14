@@ -6,6 +6,7 @@ from modes.mode import Mode
 from pybricks.tools import wait
 
 class BoxPusher(Mode):
+    WHITE = 42
     INITIAL_SPEED = 50
     DISTANCE_BIAS = 3
     THRESHOLD_DISTANCE = 20
@@ -97,9 +98,12 @@ class BoxPusher(Mode):
         self.left_motor.stop()
         self.right_motor.stop()
 
-    def drive_until_line(self):
-        # while self.color_sensor.color() != Color.WHITE
-            # drive
+    def drive_until_line(self, speed=self.INITIAL_SPEED):
+        "Drive forward until a white line is found"
+        self.drivebase.drive(speed, 0)
+        while self.color_sensor.reflect() < self.WHITE:
+            pass
+        self.drivebase.stop()
 
     def drive_until_threshold_met(self, threshold_distance, speed, overshoot_time):
         "Drive forward until an object at threshold_distance is detected. Then keep driving for overshoot_time."
