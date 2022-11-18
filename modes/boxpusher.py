@@ -4,11 +4,12 @@ from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor, GyroSensor
 from modes.mode import Mode
 from pybricks.tools import wait
+from ..controller.pcontroller import PController
 
 class BoxPusher(Mode):
     WHITE = 42
     INITIAL_SPEED = 100
-    CORRECTION_SPEED = 5
+    CORRECTION_SPEED = 2
     DISTANCE_BIAS = 5
     THRESHOLD_DISTANCE = 20
     RIGHT = -90
@@ -76,40 +77,19 @@ class BoxPusher(Mode):
         self.hub.speaker.beep()
 
         wall_distance = self.distance_sensor.distance()
-        turn_rate = 0
+        controller = PController(wall_distance, 1)
 
         # use motor angle to detect driven length
-        # self.left_motor.reset_angle(0)
-        # self.right_motor.reset_angle(0)
+        self.left_motor.reset_angle(0)
+        self.right_motor.reset_angle(0)
         target_angle = motor_cycles * 360
         
         while self.left_motor.angle() < target_angle:
-            # self.left_motor.run(speed)
-            # self.right_motor.run(speed)
-            self.drivebase.drive(speed, turn_rate)
-
+            # correct angle to drive straight
             current_distance = self.distance_sensor.distance()
+            turn_rate = controller.correct(current_distance)
+            self.drivebase.drive(speed, turn_rate)
             self.hub.screen.print(turn_rate)
-            if (current_distance > wall_distance + bias):
-                # steer left
-                self.hub.screen.print("left")
-                # left_speed = speed - self.CORRECTION_SPEED
-                # right_speed = speed + self.CORRECTION_SPEED
-                turn_rate = turn_rate - self.CORRECTION_SPEED
-            elif (current_distance < wall_distance - bias):
-                # steer right
-                self.hub.screen.print("right")
-                # left_speed = speed + self.CORRECTION_SPEED
-                # right_speed = speed - self.CORRECTION_SPEED
-                turn_rate = turn_rate + self.CORRECTION_SPEED
-            else:
-                # steer clear
-                self.hub.screen.print("straight")
-                # left_speed = speed
-                # right_speed = speed
-                turn_rate = 0
-            
-            wait(10)
 
         self.left_motor.stop()
         self.right_motor.stop()
