@@ -42,5 +42,5 @@ class StaticMockData:
     def __init__(self, value):
         self._value = value
 
-    def get():
+    def get(self):
         return self._value
