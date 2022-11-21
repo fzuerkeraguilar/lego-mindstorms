@@ -27,14 +27,15 @@ class Main:
         self.ev3 = EV3Brick()
         self.r_motor = Motor(Port.B)
         self.l_motor = Motor(Port.A)
-        self.distance_drive = Motor(Port.C)
+        self.distance_motor = Motor(Port.C)
+        self.ultrasonic_sensor = UltrasonicSensor(Port.S4)
         self.drivebase = DriveBase(
             self.l_motor, self.r_motor, wheel_diameter=33, axle_track=192
         )
         self.color_sensor = ColorSensor(Port.S1)
         self.r_touch_sensor = TouchSensor(Port.S2)
         # self.l_touch_sensor = TouchSensor(Port.S3)
-        self.distance_sensor = TurningDistanceSensor(Port.C, Port.S4)
+        self.distance_sensor = TurningDistanceSensor(self.distance_motor, self.ultrasonic_sensor)
 
     def main(self):
         # Menu to select the program to run
@@ -136,7 +137,7 @@ class Main:
                         self.color_sensor,
                         self.r_touch_sensor,
                         self.distance_sensor,
-                        self.distance_drive,
+                        self.distance_motor,
                     ).run()
                 self.ev3.screen.clear()
                 self.ev3.screen.print("Select a program to run:")
