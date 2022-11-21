@@ -8,9 +8,11 @@ from modes.mode import Mode
 
 class LineFollower(Mode):
     BLACK = 6
-    WHITE = 42
+    WHITE = 35
     THRESHOLD = (BLACK + WHITE) / 2
     GAIN = 3
+
+    FOUND_BOX = False
 
     INITIAL_SPEED = 60
     TOP_SPEED = 90
@@ -39,22 +41,24 @@ class LineFollower(Mode):
 
         # Calculate the deviation from the threshold.
         reflection = self.color_sensor.reflection()
+        self.hub.screen.print(reflection)
         deviation = reflection - self.THRESHOLD
-        rgb = self.color_sensor.rgb()
-        if rgb[0] < 10 and rgb[1] < 30 and rgb[2] > 25:
-            self.hub.speaker.beep()
-            self.drivebase.stop()
-            return True
+        if self.FOUND_BOX:
+            rgb = self.color_sensor.rgb()
+            if rgb[0] < 10 and rgb[1] < 30 and rgb[2] > 25:
+                self.hub.speaker.beep()
+                self.drivebase.stop()
+                return True
 
-        if reflection <= self.BLACK + 3:
+        if reflection == self.BLACK:
             self.speed = self.INITIAL_SPEED
             if not self.find_line_direct():
                 self.hub.speaker.beep(frequency=10000)
                 self.drivebase.straight(150)
 
-        self.speed = min(self.TOP_SPEED, self.speed + 1)
-        if abs(deviation) > 7:
-            self.speed = self.INITIAL_SPEED
+        # self.speed = min(self.TOP_SPEED, self.speed + 1)
+        # if abs(deviation) > 7:
+        #     self.speed = self.INITIAL_SPEED
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
@@ -69,12 +73,12 @@ class LineFollower(Mode):
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
+        self.FOUND_BOX = True
         self.find_line_direct()
 
     def turn_and_find_line(self, speed, time, turn_right):
         watch = StopWatch()
-        watch.pause()
-        watch.reset()
+
         if turn_right:
             speed_right = -speed
             speed_left = speed
@@ -88,12 +92,12 @@ class LineFollower(Mode):
         self.hub.speaker.beep()
         self.drivebase.stop()
 
-        self.right_motor.run_time(right_speed, time, then=Stop.HOLD, wait=False)
-        self.left_motor.run_time(left_speed, time, then=Stop.HOLD, wait=False)
-
+        self.right_motor.run_time(speed_right, time, then=Stop.HOLD, wait=False)
+        self.left_motor.run_time(speed_left, time, then=Stop.HOLD, wait=False)
+        watch.reset()
         while watch.time() < time + 100:
             if self.color_sensor.reflection() > self.THRESHOLD + 3:
-                self.hub.screen.print("Found line 1")
+                self.hub.screen.print("Found line")
                 self.right_motor.stop()
                 self.left_motor.stop()
                 return True
@@ -103,32 +107,14 @@ class LineFollower(Mode):
 
     def find_line_direct(self):
 
-        # watch = StopWatch()
-        # watch.pause()
-        # watch.reset()
-
-        # self.hub.speaker.beep()
-        # self.drivebase.stop()
-        # self.hub.screen.print("Turn left")
-        # self.right_motor.run_time(500, 1300, then=Stop.HOLD, wait=False)
-        # self.left_motor.run_time(-500, 1300, then=Stop.HOLD, wait=False)
-        # watch.resume()
-        # while watch.time() < 1400:
-        #     if self.color_sensor.reflection() > self.THRESHOLD + 3:
-        #         self.hub.screen.print("Found line 1")
-        #         self.right_motor.stop()
-        #         self.left_motor.stop()
-        #         return True
-        #     pass
-
-        if self.turn_and_find_line(500, 1300, True):
+        if self.turn_and_find_line(300, 2100, True):
             return True
 
-        if self.turn_and_find_line(500, 2600, False):
+        if self.turn_and_find_line(300, 4000, False):
             return True
 
-        self.right_motor.run_time(500, 1400, then=Stop.HOLD, wait=False)
-        self.left_motor.run_time(-500, 1400, then=Stop.HOLD, wait=True)
+        self.right_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
+        self.left_motor.run_time(500, 1400, then=Stop.HOLD, wait=True)
         return False
 
     def find_line_drivebase(self):
