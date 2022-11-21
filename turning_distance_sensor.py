@@ -13,14 +13,14 @@ class TurningDistanceSensor:
     def set_angle(self, angle):
         if angle > 90 or angle < -90:
             raise ValueError("Angle must be between -90 and 90 degrees")
-        self.turn_motor.run_angle(self.speed, angle, then=Stop.HOLD, wait=True)
+        self.turn_motor.run_target(self.speed, angle, then=Stop.HOLD, wait=True)
 
     def measure_angle(self, angle):
         if angle > 90 or angle < -90:
             raise ValueError("Angle must be between -90 and 90 degrees")
-        self.turn_motor.run_angle(self.speed, angle, wait=True)
+        self.turn_motor.run_target(self.speed, angle, wait=True)
         distance = self.ultrasonic_sensor.distance()
-        self.turn_motor.run_angle(self.speed, -angle, wait=True)
+        self.turn_motor.run_target(self.speed, -angle, wait=True)
         return distance
 
     def run_target(self, target_angle, wait=True):

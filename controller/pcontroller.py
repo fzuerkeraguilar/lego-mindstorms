@@ -1,5 +1,5 @@
 class PController:
-    def __init__(target, Kp):
+    def __init__(self, target, Kp):
         self.target = target
         self.Kp = Kp
 

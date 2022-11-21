@@ -26,9 +26,8 @@ class Debug(Mode):
 
         
         while True:
-            self.hub.screen.print(self.color_sensor.rgb())
-            self.hub.screen.print(self.color_sensor.reflection())
-            wait(100)
+            self.distance_sensor.set_angle(90)
+            self.hub.screen.print(self.distance_sensor.distance())
     
         # while Button.UP not in self.hub.buttons.pressed():
         #     # direction = 1
