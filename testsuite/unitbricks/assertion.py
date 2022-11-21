@@ -24,3 +24,6 @@ def assert_more(min, given, name=""):
 def assert_more_equals(min, given, name=""):
     if given > min:
         raise AssertionError(f"Assertion: expected more than or equals {min} but got {given}: {name}")
+
+def fail(text=""):
+    raise AssertionError(f"Fail: {text}")

@@ -2,6 +2,7 @@ import importlib.util
 from os import listdir
 from os.path import isfile, join
 from unitbricks import reset_time
+import traceback
 
 def run_tests(path):
     files = [f for f in listdir(path) if isfile(join(path, f))]
@@ -18,7 +19,7 @@ def run_tests(path):
     return success == total
 
 def run_module(path):
-    name = path.replace('/', '_').replace('.py', '')
+    name = path.replace('/', '_').replace('.py', '').replace('.test', '')
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -35,7 +36,7 @@ def run_module(path):
     return (success, failure, total)
 
 def run_test(modname, module, test):
-    print(f'\n== Test {modname}/{test}"\n')
+    print(f'\n== Test {modname}/{test}\n')
     params_name = "params_" + test
     if params_name in dir(module):
         params = getattr(module, params_name)()
@@ -54,6 +55,7 @@ def run_simple_test(module, test):
             return result
     except Exception as ex:
         print('Error:', ex)
+        traceback.print_exc()
         return False
 
 def run_test_with_params(module, test, params):
@@ -68,6 +70,7 @@ def run_test_with_params(module, test, params):
                 res = False
         except Exception as ex:
             print(f'Error:', ex)
+            traceback.print_exc()
             res = False
     return res
 
