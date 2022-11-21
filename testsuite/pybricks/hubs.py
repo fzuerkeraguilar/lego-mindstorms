@@ -1,8 +1,10 @@
+from unitbricks.mock import MockData
 
 class EV3Brick:
     def __init__(self):
         self.buttons = _Buttons()
         self.light = _Light()
+        self.screen = _Screen()
         
 
 class _Buttons:
@@ -10,9 +12,11 @@ class _Buttons:
         self._mock_data = None
 
     def pressed(self):
+        if self._mock_data == None:
+            return []
         return self._mock_data.get()
 
-    def _set_mock_data(self, data):
+    def _set(self, data = MockData([])):
         self._mock_data = data
 
 class _Light():
@@ -27,3 +31,12 @@ class _Light():
 
     def _get_status(self):
         return self._color
+class _Screen:
+    def __init__(self):
+        pass
+
+    def print(self, *args, sep='', end='\n'):
+        print(*args, sep=sep, end=end)
+
+    def clear(self):
+        pass
