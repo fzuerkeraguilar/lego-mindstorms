@@ -1,8 +1,3 @@
 #!/bin/sh
 
-if [[ -z "$1" ]]; then
-    echo "Usage: $0 program_file"
-    exit
-fi
-
-PYTHONPATH="./testsuite:$PYTHONPATH" python3 "$1"
+PYTHONPATH="./testsuite:$PYTHONPATH" python3 "test.py"
