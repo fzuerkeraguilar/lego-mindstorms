@@ -10,6 +10,7 @@ from pybricks.media.ev3dev import ImageFile
 from modes.mode import Mode
 from modes.linefollower import LineFollower
 from modes.boxpusher import BoxPusher
+from modes.bridgecrosser import BridgeCrosser
 from modes.debug import Debug
 from turning_distance_sensor import TurningDistanceSensor
 
@@ -20,7 +21,7 @@ class Main:
         self.r_motor = Motor(Port.B)
         self.l_motor = Motor(Port.A)
         self.distance_drive = Motor(Port.C)
-        self.drivebase = DriveBase(self.l_motor, self.r_motor, wheel_diameter=33, axle_track=185)
+        self.drivebase = DriveBase(self.l_motor, self.r_motor, wheel_diameter=33, axle_track=192)
         self.color_sensor = ColorSensor(Port.S1)
         self.r_touch_sensor = TouchSensor(Port.S2)
         # self.l_touch_sensor = TouchSensor(Port.S3)
