@@ -3,7 +3,7 @@ from os import listdir
 from os.path import isfile, join
 from unitbricks import reset_time
 
-def run_dir(path):
+def run_tests(path):
     files = [f for f in listdir(path) if isfile(join(path, f))]
     total = 0
     success = 0
