@@ -39,12 +39,12 @@ class Color:
         self.g = g
         self.b = b
 
-    BLACK = Color(0, 0, 0)
-    BLUE = Color(0, 0, 100)
-    GREEN = Color(0, 100, 0)
-    YELLOW = Color(100, 100, 0)
-    RED = Color(100, 0, 0)
-    WHITE = Color(100, 100, 100)
-    BROWN = Color(50, 50, 50)
-    ORANGE = Color(100, 50, 50)
-    PURPLE = Color(100, 0, 100)
+    BLACK = 1 #Self(0, 0, 0)
+    # BLUE = Self(0, 0, 100)
+    # GREEN = Self(0, 100, 0)
+    # YELLOW = Self(100, 100, 0)
+    RED = 2 #Self(100, 0, 0)
+    # WHITE = Self(100, 100, 100)
+    # BROWN = Self(50, 50, 50)
+    # ORANGE = Self(100, 50, 50)
+    # PURPLE = Self(100, 0, 100)
