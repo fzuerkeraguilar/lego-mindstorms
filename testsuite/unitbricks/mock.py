@@ -37,3 +37,10 @@ class TimedMockData:
                 return self._default_data
             else:
                 return self._data[0][1]
+
+class StaticMockData:
+    def __init__(self, value):
+        self._value = value
+
+    def get():
+        return self._value
