@@ -4,7 +4,7 @@ from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor, GyroSensor
 from modes.mode import Mode
 from pybricks.tools import wait
-from ..controller.pcontroller import PController
+from controller.pcontroller import PController
 
 class BoxPusher(Mode):
     WHITE = 42
