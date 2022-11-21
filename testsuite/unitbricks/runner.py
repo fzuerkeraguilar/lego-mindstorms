@@ -1,6 +1,7 @@
 import importlib.util
 from os import listdir
 from os.path import isfile, join
+from unitbricks import reset_time
 
 def run_dir(path):
     files = [f for f in listdir(path) if isfile(join(path, f))]
@@ -38,6 +39,7 @@ def run_test(modname, module, test):
 
     func = getattr(module, test)
     try:
+        reset_environment()
         result = func()
         if result == None:
             return True
@@ -46,3 +48,6 @@ def run_test(modname, module, test):
     except Exception as ex:
         print('Error:', ex)
         return False
+
+def reset_environment():
+    reset_time()
