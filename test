@@ -1,3 +1,10 @@
 #!/bin/sh
 
-PYTHONPATH="./testsuite:$PYTHONPATH" python3 "test.py"
+RFILE=""
+if [[ -z "$1" ]]; then
+    RFILE="test.py"
+else
+    RFILE="$1"
+fi
+
+PYTHONPATH="./testsuite:$PYTHONPATH" python3 "$RFILE"

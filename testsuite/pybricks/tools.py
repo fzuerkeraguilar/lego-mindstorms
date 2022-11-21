@@ -3,7 +3,7 @@ from unitbricks import elapse, get_time
 def wait(time):
     elapse(time)
 
-class Stopwatch:
+class StopWatch:
     def __init__(self):
         self._start_time = get_time()
         self._paused_at = None

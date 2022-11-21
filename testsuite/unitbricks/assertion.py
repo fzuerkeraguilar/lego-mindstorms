@@ -18,11 +18,11 @@ def assert_less_equals(max, given, name=""):
         raise AssertionError(f"Assertion: expected less than or equals {max} but got {given}: {name}")
 
 def assert_more(min, given, name=""):
-    if given >= min:
+    if given <= min:
         raise AssertionError(f"Assertion: expected more than {min} but got {given}: {name}")
 
 def assert_more_equals(min, given, name=""):
-    if given > min:
+    if given < min:
         raise AssertionError(f"Assertion: expected more than or equals {min} but got {given}: {name}")
 
 def fail(text=""):
