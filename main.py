@@ -11,6 +11,7 @@ from modes.mode import Mode
 from modes.linefollower import LineFollower
 from modes.boxpusher import BoxPusher
 from modes.bridgecrosser import BridgeCrosser
+from modes.pointfinder import PointFinder
 from modes.debug import Debug
 from turning_distance_sensor import TurningDistanceSensor
 
@@ -36,7 +37,7 @@ class Main:
         self.ev3.screen.print("Select a program to run:")
         self.ev3.screen.print(options[option])
         while True:
-            wait(100)
+            wait(150)
             if Button.UP in self.ev3.buttons.pressed():
                 option = (option - 1) % len(options)
                 self.ev3.screen.clear()

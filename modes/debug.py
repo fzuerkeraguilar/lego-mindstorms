@@ -26,8 +26,36 @@ class Debug(Mode):
 
         
         while True:
-            self.distance_sensor.set_angle(90)
-            self.hub.screen.print(self.distance_sensor.distance())
+            rgb = self.color_sensor.rgb()
+            #h, s, v = self.rgb_to_hsv(rgb)
+            self.hub.screen.print(rgb)
+            #self.hub.screen.print(v)
+        
+    def rgb_to_hsv(self, rgb):
+        r = rgb[0]
+        g = rgb[1]
+        b = rgb[2]
+        r = r/255
+        g = g/255
+        b = b/255
+        cmax = max(r, g, b)
+        cmin = min(r, g, b)
+        delta = cmax - cmin
+        if delta == 0:
+            h = 0
+        elif cmax == r:
+            h = 60 * (((g-b)/delta) % 6)
+        elif cmax == g:
+            h = 60 * (((b-r)/delta) + 2)
+        elif cmax == b:
+            h = 60 * (((r-g)/delta) + 4)
+        if cmax == 0:
+            s = 0
+        else:
+            s = delta/cmax
+        v = cmax
+        return h, s, v
+
     
         # while Button.UP not in self.hub.buttons.pressed():
         #     # direction = 1
