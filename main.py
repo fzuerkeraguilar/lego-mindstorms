@@ -19,22 +19,20 @@ from modes.boxpusher import BoxPusher
 from modes.bridgecrosser import BridgeCrosser
 from modes.pointfinder import PointFinder
 from modes.debug import Debug
+from modes.calibration import Calibration
 from turning_distance_sensor import TurningDistanceSensor
 
 
 class Main:
     def __init__(self):
         self.ev3 = EV3Brick()
-        self.r_motor = Motor(Port.B)
         self.l_motor = Motor(Port.A)
-        self.distance_drive = Motor(Port.C)
-        self.drivebase = DriveBase(
-            self.l_motor, self.r_motor, wheel_diameter=33, axle_track=192
-        )
+        self.r_motor = Motor(Port.B)
+
         self.color_sensor = ColorSensor(Port.S1)
         self.r_touch_sensor = TouchSensor(Port.S2)
-        # self.l_touch_sensor = TouchSensor(Port.S3)
         self.distance_sensor = TurningDistanceSensor(Port.C, Port.S4)
+        self.config = Calibration(self.hub, self.l_motor, self.r_motor)
 
     def main(self):
         # Menu to select the program to run
@@ -45,6 +43,7 @@ class Main:
             "Point Finder",
             "Complete Run",
             "Debug",
+            "Calibration",
         ]
         option = 0
 
@@ -68,76 +67,60 @@ class Main:
                 self.ev3.screen.print("Running " + options[option])
                 if option == 0:
                     LineFollower(
-                        self.ev3,
-                        self.drivebase,
-                        self.r_motor,
-                        self.l_motor,
                         self.color_sensor,
                         self.distance_sensor,
+                        self.config,
                     ).run()
                 elif option == 1:
                     BoxPusher(
-                        self.ev3,
-                        self.drivebase,
                         self.color_sensor,
                         self.distance_sensor,
                         self.r_touch_sensor,
-                        self.r_motor,
-                        self.l_motor,
+                        self.config,
                     ).run()
                 elif option == 2:
                     BridgeCrosser(
-                        self.ev3,
-                        self.drivebase,
                         self.color_sensor,
                         self.distance_sensor,
+                        self.config,
                     ).run()
                 elif option == 3:
                     PointFinder(
-                        self.ev3,
-                        self.drivebase,
                         self.color_sensor,
                         self.distance_sensor,
+                        self.config,
                     ).run()
                 elif option == 4:
                     LineFollower(
-                        self.ev3,
-                        self.drivebase,
-                        self.r_motor,
-                        self.l_motor,
                         self.color_sensor,
                         self.distance_sensor,
+                        self.config,
                     ).run()
                     BoxPusher(
-                        self.ev3,
-                        self.drivebase,
                         self.color_sensor,
                         self.distance_sensor,
                         self.r_touch_sensor,
+                        self.config,
                     ).run()
                     BridgeCrosser(
-                        self.ev3,
-                        self.drivebase,
                         self.color_sensor,
                         self.distance_sensor,
+                        self.config,
                     ).run()
                     PointFinder(
-                        self.ev3,
-                        self.drivebase,
                         self.color_sensor,
                         self.distance_sensor,
+                        self.config,
                     ).run()
                 elif option == 5:
                     Debug(
-                        self.ev3,
-                        self.drivebase,
-                        self.r_motor,
-                        self.l_motor,
                         self.color_sensor,
-                        self.r_touch_sensor,
                         self.distance_sensor,
-                        self.distance_drive,
+                        self.r_touch_sensor,
+                        self.config,
                     ).run()
+                elif option == 6:
+                    self.config.run()
                 self.ev3.screen.clear()
                 self.ev3.screen.print("Select a program to run:")
                 self.ev3.screen.print(options[option])

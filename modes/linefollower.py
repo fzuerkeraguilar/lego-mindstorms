@@ -15,25 +15,23 @@ class LineFollower(Mode):
     FOUND_BOX = False
 
     INITIAL_SPEED = 60
-    TOP_SPEED = 90
+    TOP_SPEED = 100
     STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
-    END_COLOR = Color.BLUE
 
     def __init__(
         self,
-        ev3_hub,
-        drivebase,
-        right_motor,
-        left_motor,
         color_sensor,
         distance_sensor,
+        config,
         speed=INITIAL_SPEED,
     ):
-        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
-        self.right_motor = right_motor
-        self.left_motor = left_motor
+        super().__init__(color_sensor, distance_sensor, config, speed)
+        self.r_motor = self.drivebase.right_motor
+        self.l_motor = self.drivebase.left_motor
+        self.BLACK, self.WHITE = self.config.get_bw()
+        self.THRESHOLD = (self.BLACK + self.WHITE) / 2
 
     def follow_line(self):
         if self.distance_sensor.distance() < 100:
@@ -92,14 +90,14 @@ class LineFollower(Mode):
         self.hub.speaker.beep()
         self.drivebase.stop()
 
-        self.right_motor.run_time(speed_right, time, then=Stop.HOLD, wait=False)
-        self.left_motor.run_time(speed_left, time, then=Stop.HOLD, wait=False)
+        self.r_motor.run_time(speed_right, time, then=Stop.HOLD, wait=False)
+        self.l_motor.run_time(speed_left, time, then=Stop.HOLD, wait=False)
         watch.reset()
         while watch.time() < time + 100:
             if self.color_sensor.reflection() > self.THRESHOLD + 3:
                 self.hub.screen.print("Found line")
-                self.right_motor.stop()
-                self.left_motor.stop()
+                self.r_motor.stop()
+                self.l_motor.stop()
                 return True
             pass
 
@@ -113,8 +111,8 @@ class LineFollower(Mode):
         if self.turn_and_find_line(300, 4000, False):
             return True
 
-        self.right_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
-        self.left_motor.run_time(500, 1400, then=Stop.HOLD, wait=True)
+        self.r_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
+        self.l_motor.run_time(500, 1400, then=Stop.HOLD, wait=True)
         return False
 
     def find_line_drivebase(self):

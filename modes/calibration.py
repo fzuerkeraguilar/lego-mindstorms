@@ -1,4 +1,3 @@
-from modes.mode import Mode
 from pybricks.tools import wait
 from pybricks.hubs import EV3Brick
 from pybricks.parameters import Button
@@ -7,11 +6,10 @@ from pybricks.robotics import DriveBase
 import json
 
 
-class Calibration(Mode):
-    def __init__(self, ev3_hub, drivebase, color_sensor, distance_sensor, speed=100):
-        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
-        self.left_motor = self.drivebase.left_motor
-        self.right_motor = self.drivebase.right_motor
+class Calibration:
+    def __init__(self, ev3_hub, l_motor, r_motor):
+        self.left_motor = l_motor
+        self.right_motor = r_motor
         self.config = json.load(open("config.json"))
 
     def get_black():
@@ -38,13 +36,13 @@ class Calibration(Mode):
                 self.config["dusty_drivebase"]["wheel_diameter"],
                 self.config["dusty_drivebase"]["wheel_base"],
             )
-    
+
     def get_wheel_diameter(self, clean=False):
         if clean:
             return self.config["clean_drivebase"]["wheel_diameter"]
         else:
             return self.config["dusty_drivebase"]["wheel_diameter"]
-        
+
     def get_wheel_base(self, clean=False):
         if clean:
             return self.config["clean_drivebase"]["wheel_base"]
