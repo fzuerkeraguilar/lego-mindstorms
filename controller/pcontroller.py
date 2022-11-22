@@ -6,4 +6,3 @@ class PController:
     def correction(self, current):
         deviation = self.target - current
         return self.Kp * deviation
-    

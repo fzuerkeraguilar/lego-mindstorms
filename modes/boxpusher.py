@@ -6,6 +6,7 @@ from modes.mode import Mode
 from pybricks.tools import wait
 from controller.pcontroller import PController
 
+
 class BoxPusher(Mode):
     WHITE = 30
     INITIAL_SPEED = 100
@@ -16,8 +17,17 @@ class BoxPusher(Mode):
     CENTER = 0
     LEFT = 90
 
-    def __init__(self, ev3_hub, drivebase,
-    color_sensor, distance_sensor, touch_sensor, right_motor, left_motor, speed=INITIAL_SPEED):
+    def __init__(
+        self,
+        ev3_hub,
+        drivebase,
+        color_sensor,
+        distance_sensor,
+        touch_sensor,
+        right_motor,
+        left_motor,
+        speed=INITIAL_SPEED,
+    ):
         super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
         self.left_motor = left_motor
         self.right_motor = right_motor
@@ -44,12 +54,12 @@ class BoxPusher(Mode):
 
         # push box until leaving the box's field
         self.hub.screen.print("push box 1")
-        self.drive_until_line() # ignore first white line
+        self.drive_until_line()  # ignore first white line
         self.hub.speaker.beep()
-        self.drivebase.straight(50) # move past the line to avoid detecting it again
+        self.drivebase.straight(50)  # move past the line to avoid detecting it again
         self.drive_until_line()
         self.drivebase.straight(100)
-        self.drivebase.straight(-50) # set back
+        self.drivebase.straight(-50)  # set back
         self.drivebase.turn(90)
 
         # drive behind the box
@@ -60,24 +70,25 @@ class BoxPusher(Mode):
 
         self.drive_until_box_found(self.THRESHOLD_DISTANCE, overshoot_time=20)
         self.drivebase.turn(-90)
-        
+
         # push box into target field
         self.drive_until_line()
-        self.drivebase.straight(50) # move past the line
-
+        self.drivebase.straight(50)  # move past the line
 
     def find_end_pos(self):
         self.hub.screen.print("find end pos")
         self.hub.speaker.beep()
-        self.drivebase.straight(-50) # set back
+        self.drivebase.straight(-50)  # set back
         self.drivebase.turn(-90)
         self.drive_until_line()
         self.drivebase.turn(-90)
         self.distance_sensor.set_angle(self.LEFT)
         self.drive_guided_straight(100, 385)
         # TODO: drive until blue line detected
-        
-    def drive_guided_straight(self, distance, wall_distance, speed = INITIAL_SPEED, bias = DISTANCE_BIAS):
+
+    def drive_guided_straight(
+        self, distance, wall_distance, speed=INITIAL_SPEED, bias=DISTANCE_BIAS
+    ):
         "Drive straight for motor_cycles with guidance from the distance sensor"
         self.hub.screen.print("guided straight")
         self.hub.speaker.beep()
@@ -109,9 +120,10 @@ class BoxPusher(Mode):
         self.drivebase.stop()
 
     # def drive_until_threshold_met(self, threshold_distance, speed, overshoot_time):
-        
 
-    def drive_until_box_found(self, threshold_distance, speed = INITIAL_SPEED, overshoot_time = 0):
+    def drive_until_box_found(
+        self, threshold_distance, speed=INITIAL_SPEED, overshoot_time=0
+    ):
         "Drive forward until an object at threshold_distance is detected. Then keep driving for overshoot_time."
         "Positive threshold to detect objects entering the view, negative for objects leaving."
         self.hub.screen.print("until threshold")
@@ -126,11 +138,12 @@ class BoxPusher(Mode):
         # wait(overshoot_time) # keep driving for overshoot_time.
         self.drivebase.straight(150)
         self.drivebase.stop()
-        
 
-    def drive_until_box_lost(self, threshold_distance, speed = INITIAL_SPEED, overshoot_time = 0):
-        #"Drive forward until an object at threshold_distance is detected. Then keep driving for overshoot_time."
-        #"Positive threshold to detect objects entering the view, negative for objects leaving."
+    def drive_until_box_lost(
+        self, threshold_distance, speed=INITIAL_SPEED, overshoot_time=0
+    ):
+        # "Drive forward until an object at threshold_distance is detected. Then keep driving for overshoot_time."
+        # "Positive threshold to detect objects entering the view, negative for objects leaving."
         self.hub.screen.print("until threshold")
         self.hub.speaker.beep()
 

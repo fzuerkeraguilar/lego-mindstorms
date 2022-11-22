@@ -2,8 +2,8 @@ from pybricks.ev3devices import Motor, UltrasonicSensor
 from pybricks.parameters import Port, Stop
 from pybricks.tools import wait
 
-class TurningDistanceSensor:
 
+class TurningDistanceSensor:
     def __init__(self, motor_port, ultrasonic_sensor_port, speed=100):
         self.turn_motor = Motor(motor_port)
         self.ultrasonic_sensor = UltrasonicSensor(ultrasonic_sensor_port)
@@ -25,7 +25,7 @@ class TurningDistanceSensor:
 
     def run_target(self, target_angle, wait=True):
         self.turn_motor.run_target(self.speed, target_angle, wait=wait)
-    
+
     def run_angle(self, angle, wait=True):
         self.turn_motor.run_angle(self.speed, angle, wait=wait)
 

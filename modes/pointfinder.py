@@ -5,11 +5,13 @@ from pybricks.ev3devices import TouchSensor, ColorSensor, GyroSensor
 from modes.mode import Mode
 
 
-class PointFinder (Mode):
+class PointFinder(Mode):
     INITIAL_SPEED = 100
     INITIAL_SIDE_LENGTH = 1000
 
-    def __init__(self, ev3_hub, drivebase, color_sensor, distance_sensor, speed = INITIAL_SPEED):
+    def __init__(
+        self, ev3_hub, drivebase, color_sensor, distance_sensor, speed=INITIAL_SPEED
+    ):
         super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
 
     def circle_search(self):
@@ -17,9 +19,9 @@ class PointFinder (Mode):
         white_found = False
         stop_distance = 40
 
-        for i in range(0,3):
+        for i in range(0, 3):
             while self.distance_sensor.distance() > stop_distance:
-                self.drivebase.drive(self.INITIAL_SPEED,0)
+                self.drivebase.drive(self.INITIAL_SPEED, 0)
                 rgb = self.color_sensor.rgb()
                 if rgb[0] > 10 and rgb[1] < 20 and rgb[2] < 20 and not red_found:
                     red_found = True
@@ -37,9 +39,9 @@ class PointFinder (Mode):
 
         while stop_distance < 500:
             stop_distance += 70
-            for i in range(0,4):
+            for i in range(0, 4):
                 while self.distance_sensor.distance() > stop_distance:
-                    self.drivebase.drive(self.INITIAL_SPEED,0)
+                    self.drivebase.drive(self.INITIAL_SPEED, 0)
                     rgb = self.color_sensor.rgb()
                     if rgb[0] > 50 and not red_found:
                         red_found = True
@@ -55,7 +57,5 @@ class PointFinder (Mode):
                             return
                 self.drivebase.turn(-87)
 
-
-    
     def run(self):
         self.circle_search()

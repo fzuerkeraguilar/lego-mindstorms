@@ -6,8 +6,8 @@ from pybricks.ev3devices import ColorSensor
 from pybricks.robotics import DriveBase
 import json
 
-class Calibration(Mode):
 
+class Calibration(Mode):
     def __init__(self, ev3_hub, drivebase, color_sensor, distance_sensor, speed=100):
         super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
         self.left_motor = self.drivebase.left_motor
@@ -25,12 +25,20 @@ class Calibration(Mode):
 
     def get_drivebase(self, clean=False):
         if clean:
-            return DriveBase(self.left_motor, self.right_motor,
-            self.config["clean_drivebase"]["wheel_diameter"],self.config["clean_drivebase"]["wheel_base"])
+            return DriveBase(
+                self.left_motor,
+                self.right_motor,
+                self.config["clean_drivebase"]["wheel_diameter"],
+                self.config["clean_drivebase"]["wheel_base"],
+            )
         else:
-            return DriveBase(self.left_motor, self.right_motor,
-            self.config["dusty_drivebase"]["wheel_diameter"],self.config["dusty_drivebase"]["wheel_base"])
-    
+            return DriveBase(
+                self.left_motor,
+                self.right_motor,
+                self.config["dusty_drivebase"]["wheel_diameter"],
+                self.config["dusty_drivebase"]["wheel_base"],
+            )
+
     def caibrate_color_sensor(self):
         original_black = self.config["black_reflection"]
         original_white = self.config["white_reflection"]
@@ -38,7 +46,7 @@ class Calibration(Mode):
         white_reflection = 0
         while True:
             white_reflection = self.color_sensor.reflection()
-            
+
             self.hub.screen.clear()
             self.hub.screen.print("Place on white, press center")
             self.hub.screen.print("Press left to exit whithout saving")
@@ -66,7 +74,7 @@ class Calibration(Mode):
             wait(150)
         self.hub.screen.clear()
         return (black_reflection, white_reflection)
-    
+
     def calibrate_drivebase(self, clean=False):
         wheel_base, wheel_diameter = 0, 0
         if clean:
@@ -77,7 +85,7 @@ class Calibration(Mode):
             wheel_diameter = self.config["dusty_drivebase"]["wheel_diameter"]
         delta_wheel_base = 0
         delta_wheel_diameter = 0
-        
+
         self.hub.screen.clear()
         self.hub.screen.print("Place on ground")
         self.hub.screen.print("Press center to turn 360")
@@ -92,12 +100,16 @@ class Calibration(Mode):
             if Button.UP in buttons:
                 delta_wheel_base += 1
                 self.hub.screen.clear()
-                self.hub.screen.print("Wheel base: " + str(wheel_base + delta_wheel_base) + "mm")
+                self.hub.screen.print(
+                    "Wheel base: " + str(wheel_base + delta_wheel_base) + "mm"
+                )
                 self.hub.screen.print("Original: " + str(wheel_base) + "mm")
             if Button.DOWN in buttons:
                 delta_wheel_base -= 1
                 self.hub.screen.clear()
-                self.hub.screen.print("Wheel base: " + str(wheel_base + delta_wheel_base) + "mm")
+                self.hub.screen.print(
+                    "Wheel base: " + str(wheel_base + delta_wheel_base) + "mm"
+                )
                 self.hub.screen.print("Original: " + str(wheel_base) + "mm")
             if Button.RIGHT in buttons:
                 break
@@ -118,12 +130,20 @@ class Calibration(Mode):
             if Button.UP in buttons:
                 delta_wheel_diameter += 1
                 self.hub.screen.clear()
-                self.hub.screen.print("Wheel diameter: " + str(wheel_diameter + delta_wheel_diameter) + "mm")
+                self.hub.screen.print(
+                    "Wheel diameter: "
+                    + str(wheel_diameter + delta_wheel_diameter)
+                    + "mm"
+                )
                 self.hub.screen.print("Original: " + str(wheel_diameter) + "mm")
             if Button.DOWN in buttons:
                 delta_wheel_diameter -= 1
                 self.hub.screen.clear()
-                self.hub.screen.print("Wheel diameter: " + str(wheel_diameter + delta_wheel_diameter) + "mm")
+                self.hub.screen.print(
+                    "Wheel diameter: "
+                    + str(wheel_diameter + delta_wheel_diameter)
+                    + "mm"
+                )
                 self.hub.screen.print("Original: " + str(wheel_diameter) + "mm")
             if Button.RIGHT in buttons:
                 break
@@ -133,7 +153,13 @@ class Calibration(Mode):
         return wheel_base + delta_wheel_base, wheel_diameter + delta_wheel_diameter
 
     def run(self):
-        options = ["Dusty Drivebase", "Clean Drivebase", "Color Sensor", "Save to file", "Exit"]
+        options = [
+            "Dusty Drivebase",
+            "Clean Drivebase",
+            "Color Sensor",
+            "Save to file",
+            "Exit",
+        ]
         option = 0
         while True:
             self.hub.screen.clear()
@@ -163,7 +189,3 @@ class Calibration(Mode):
                 elif option == 4:
                     break
             wait(150)
-        
-
-
-        
