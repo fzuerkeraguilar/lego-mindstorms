@@ -25,8 +25,8 @@ class Debug(Mode):
     ):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.touch_sensor = touch_sensor
-        self.left_motor = self.drivebase.left_motor
-        self.right_motor = self.drivebase.right_motor
+        self.left_motor = self.drivebase.left
+        self.right_motor = self.drivebase.right
 
     def run(self):
         # self.right_motor.reset_angle(0)
