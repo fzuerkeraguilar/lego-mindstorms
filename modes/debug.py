@@ -17,21 +17,16 @@ from modes.mode import Mode
 class Debug(Mode):
     def __init__(
         self,
-        ev3_hub,
-        drivebase,
-        right_motor,
-        left_motor,
         color_sensor,
-        touch_sensor,
         distance_sensor,
-        distance_drive,
+        touch_sensor,
+        config,
         speed=100,
     ):
-        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
+        super().__init__(color_sensor, distance_sensor, config, speed)
         self.touch_sensor = touch_sensor
-        self.distance_drive = distance_drive
-        self.right_motor = right_motor
-        self.left_motor = left_motor
+        self.left_motor = self.drivebase.left_motor
+        self.right_motor = self.drivebase.right_motor
 
     def run(self):
         # self.right_motor.reset_angle(0)
@@ -69,14 +64,3 @@ class Debug(Mode):
             s = delta / cmax
         v = cmax
         return h, s, v
-
-        # while Button.UP not in self.hub.buttons.pressed():
-        #     # direction = 1
-        #     # self.hub.screen.print(self.color_sensor.reflection())
-        #     # self.drivebase.drive(100, 0)
-        #     # self.distance_drive.reset_angle(0)
-        #     # self.distance_drive.run_angle(100, 90, wait=True)
-        #     # wait(500)
-        #     # self.distance_drive.run_angle(100, -90, wait=True)
-        #     # wait(500)
-        #     self.drivebase.turn(360)

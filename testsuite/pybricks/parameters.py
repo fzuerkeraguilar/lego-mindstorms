@@ -14,6 +14,7 @@ class Button:
     RIGHT_UP = 13
     RIGHT_PLUS = 14
 
+
 class Port:
     A = 1
     B = 2
@@ -24,14 +25,17 @@ class Port:
     S3 = 12
     S4 = 13
 
+
 class Direction:
     CLOCKWISE = 1
     COUNTERCLOCKWISE = -1
+
 
 class Stop:
     COAST = 1
     BRAKE = 2
     HOLD = 3
+
 
 class Color:
     def __init__(self, r, g, b):
@@ -39,7 +43,7 @@ class Color:
         self.g = g
         self.b = b
 
-    BLACK = 1 
+    BLACK = 1
     BLUE = 2
     GREEN = 3
     YELLOW = 4
