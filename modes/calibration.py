@@ -44,13 +44,12 @@ class Calibration(Mode):
         original_white = self.config["white_reflection"]
         black_reflection = 0
         white_reflection = 0
+        self.hub.screen.clear()
+        self.hub.screen.print("Place on white, press center")
+        self.hub.screen.print("Press left to exit whithout saving")
         while True:
             white_reflection = self.color_sensor.reflection()
-
-            self.hub.screen.clear()
-            self.hub.screen.print("Place on white, press center")
-            self.hub.screen.print("Press left to exit whithout saving")
-            self.hub.screen.print(white_reflection)
+            self.hub.screen.draw_text(0, 20, "White: " + str(white_reflection))
 
             buttons = self.hub.buttons.pressed()
             if Button.CENTER in buttons:
@@ -58,13 +57,12 @@ class Calibration(Mode):
             if Button.LEFT in buttons:
                 return original_black, original_white
             wait(150)
+        self.hub.screen.clear()
+        self.hub.screen.print("Place on black, press center")
+        self.hub.screen.print("Press left to exit whithout saving")
         while True:
             black_reflection = self.color_sensor.reflection()
-
-            self.hub.screen.clear()
-            self.hub.screen.print("Place on black, press center")
-            self.hub.screen.print("Press left to exit whithout saving")
-            self.hub.screen.print(black_reflection)
+            self.hub.screen.draw_text(0, 20, "Black: " + str(black_reflection))
 
             buttons = self.hub.buttons.pressed()
             if Button.CENTER in buttons:
