@@ -38,6 +38,18 @@ class Calibration(Mode):
                 self.config["dusty_drivebase"]["wheel_diameter"],
                 self.config["dusty_drivebase"]["wheel_base"],
             )
+    
+    def get_wheel_diameter(self, clean=False):
+        if clean:
+            return self.config["clean_drivebase"]["wheel_diameter"]
+        else:
+            return self.config["dusty_drivebase"]["wheel_diameter"]
+        
+    def get_wheel_base(self, clean=False):
+        if clean:
+            return self.config["clean_drivebase"]["wheel_base"]
+        else:
+            return self.config["dusty_drivebase"]["wheel_base"]
 
     def caibrate_color_sensor(self):
         original_black = self.config["black_reflection"]
@@ -159,15 +171,21 @@ class Calibration(Mode):
             "Exit",
         ]
         option = 0
+        self.hub.screen.clear()
+        self.hub.screen.print("Select a calibration to run:")
+        self.hub.screen.print(options[option])
         while True:
-            self.hub.screen.clear()
-            self.hub.screen.print("Select a calibration to run:")
-            self.hub.screen.print(options[option])
             buttons = self.hub.buttons.pressed()
             if Button.UP in buttons:
                 option = (option - 1) % len(options)
+                self.hub.screen.clear()
+                self.hub.screen.print("Select a calibration to run:")
+                self.hub.screen.print(options[option])
             if Button.DOWN in buttons:
                 option = (option + 1) % len(options)
+                self.hub.screen.clear()
+                self.hub.screen.print("Select a calibration to run:")
+                self.hub.screen.print(options[option])
             if Button.CENTER in buttons:
                 if option == 0:
                     wheel_base, wheel_diameter = self.calibrate_drivebase()
