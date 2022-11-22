@@ -1,4 +1,5 @@
 from unitbricks import get_time
+import random
 
 class MockData:
     def __init__(self, default_data = None):
@@ -44,3 +45,12 @@ class StaticMockData:
 
     def get(self):
         return self._value
+
+class Jitter:
+    def __init__(self, jitter, data):
+        self._jitter = jitter
+        self._data = data
+
+    def get(self):
+        rnd = random.randint(-self._jitter, self._jitter)
+        return self._data.get() + rnd
