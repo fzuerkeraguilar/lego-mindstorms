@@ -1,5 +1,5 @@
 from turning_distance_sensor import TurningDistanceSensor
-from pybricks.parameters import Port, Button
+from pybricks.parameters import Port, Button, Direction
 from pybricks.ev3devices import (Motor, UltrasonicSensor)
 from unitbricks.mock import StaticMockData
 from unitbricks.assertion import assert_equals

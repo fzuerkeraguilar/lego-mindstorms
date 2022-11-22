@@ -26,7 +26,7 @@ class Port:
 
 class Direction:
     CLOCKWISE = 1
-    COUNTERCLOCKWISE = 2
+    COUNTERCLOCKWISE = -1
 
 class Stop:
     COAST = 1

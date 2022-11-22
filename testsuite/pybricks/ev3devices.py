@@ -58,6 +58,7 @@ class ColorSensor():
 
 class Motor():
     def __init__(self, positive_direction=Direction.CLOCKWISE, gears=None):
+        # Note: gears and negative direction not supported
         self._current_speed = 0 # deg/s
         self._start_time = get_time()
         self._prev_angle = 0 # cummulated previous angle
