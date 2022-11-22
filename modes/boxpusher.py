@@ -32,7 +32,7 @@ class BoxPusher(Mode):
         self.hub.speaker.beep()
         self.drivebase.straight(100)
         self.distance_sensor.set_angle(self.LEFT)
-        self.drive_guided_straight(1150)
+        self.drive_guided_straight(1150, 200)
 
     def push_box(self):
         self.hub.speaker.beep()
@@ -74,15 +74,15 @@ class BoxPusher(Mode):
         self.drive_until_line()
         self.drivebase.turn(-90)
         self.distance_sensor.set_angle(self.LEFT)
-        self.drive_guided_straight(60)
+        self.drive_guided_straight(100, 385)
         # TODO: drive until blue line detected
         
-    def drive_guided_straight(self, distance, speed = INITIAL_SPEED, bias = DISTANCE_BIAS):
+    def drive_guided_straight(self, distance, wall_distance, speed = INITIAL_SPEED, bias = DISTANCE_BIAS):
         "Drive straight for motor_cycles with guidance from the distance sensor"
         self.hub.screen.print("guided straight")
         self.hub.speaker.beep()
 
-        wall_distance = 200
+        wall_distance = wall_distance
         controller = PController(wall_distance, 0.1)
 
         # use drivebase to detect driven length
