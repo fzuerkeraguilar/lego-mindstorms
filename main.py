@@ -38,113 +38,55 @@ class Main:
         self.distance_sensor = TurningDistanceSensor(self.distance_motor, self.ultrasonic_sensor)
 
     def main(self):
-        # Menu to select the program to run
-        options = [
-            "Line Follower",
-            "Box Pusher",
-            "Bridge Crosser",
-            "Point Finder",
-            "Complete Run",
-            "Debug",
+        modes = [
+            ("Line Follower", LineFollower(
+                                self.ev3,
+                                self.drivebase,
+                                self.r_motor,
+                                self.l_motor,
+                                self.color_sensor,
+                                self.distance_sensor,
+                            )),
+            ("Box Pusher", BoxPusher(
+                                self.ev3,
+                                self.drivebase,
+                                self.color_sensor,
+                                self.distance_sensor,
+                                self.r_touch_sensor,
+                                self.r_motor,
+                                self.l_motor,
+                            )),
+            ("Bridge Crosser", BridgeCrosser(
+                                self.ev3,
+                                self.drivebase,
+                                self.color_sensor,
+                                self.distance_sensor,
+                            )),
+            ("Point Finder", PointFinder(
+                                self.ev3,
+                                self.drivebase,
+                                self.color_sensor,
+                                self.distance_sensor,
+                            )),
+            ("Debug", Debug(
+                                self.ev3,
+                                self.drivebase,
+                                self.r_motor,
+                                self.l_motor,
+                                self.color_sensor,
+                                self.r_touch_sensor,
+                                self.distance_sensor,
+                                self.distance_motor,
+                            ))
         ]
-        option = 0
 
-        self.ev3.screen.clear()
-        self.ev3.screen.print("Select a program to run:")
-        self.ev3.screen.print(options[option])
-        while True:
-            wait(150)
-            if Button.UP in self.ev3.buttons.pressed():
-                option = (option - 1) % len(options)
-                self.ev3.screen.clear()
-                self.ev3.screen.print("Select a program to run:")
-                self.ev3.screen.print(options[option])
-            elif Button.DOWN in self.ev3.buttons.pressed():
-                option = (option + 1) % len(options)
-                self.ev3.screen.clear()
-                self.ev3.screen.print("Select a program to run:")
-                self.ev3.screen.print(options[option])
-            elif Button.RIGHT in self.ev3.buttons.pressed():
-                self.ev3.screen.clear()
-                self.ev3.screen.print("Running " + options[option])
-                if option == 0:
-                    LineFollower(
-                        self.ev3,
-                        self.drivebase,
-                        self.r_motor,
-                        self.l_motor,
-                        self.color_sensor,
-                        self.distance_sensor,
-                    ).run()
-                elif option == 1:
-                    BoxPusher(
-                        self.ev3,
-                        self.drivebase,
-                        self.color_sensor,
-                        self.distance_sensor,
-                        self.r_touch_sensor,
-                        self.r_motor,
-                        self.l_motor,
-                    ).run()
-                elif option == 2:
-                    BridgeCrosser(
-                        self.ev3,
-                        self.drivebase,
-                        self.color_sensor,
-                        self.distance_sensor,
-                    ).run()
-                elif option == 3:
-                    PointFinder(
-                        self.ev3,
-                        self.drivebase,
-                        self.color_sensor,
-                        self.distance_sensor,
-                    ).run()
-                elif option == 4:
-                    LineFollower(
-                        self.ev3,
-                        self.drivebase,
-                        self.r_motor,
-                        self.l_motor,
-                        self.color_sensor,
-                        self.distance_sensor,
-                    ).run()
-                    BoxPusher(
-                        self.ev3,
-                        self.drivebase,
-                        self.color_sensor,
-                        self.distance_sensor,
-                        self.r_touch_sensor,
-                    ).run()
-                    BridgeCrosser(
-                        self.ev3,
-                        self.drivebase,
-                        self.color_sensor,
-                        self.distance_sensor,
-                    ).run()
-                    PointFinder(
-                        self.ev3,
-                        self.drivebase,
-                        self.color_sensor,
-                        self.distance_sensor,
-                    ).run()
-                elif option == 5:
-                    Debug(
-                        self.ev3,
-                        self.drivebase,
-                        self.r_motor,
-                        self.l_motor,
-                        self.color_sensor,
-                        self.r_touch_sensor,
-                        self.distance_sensor,
-                        self.distance_motor,
-                    ).run()
-                self.ev3.screen.clear()
-                self.ev3.screen.print("Select a program to run:")
-                self.ev3.screen.print(options[option])
-            elif Button.CENTER in self.ev3.buttons.pressed():
-                break
+        menu = Menu(self.ev3, modes)
+        program = menu.show()
 
+        if program == None:
+            return
+        else:
+            program.run()
 
 if __name__ == "__main__":
     Main().main()
