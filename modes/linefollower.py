@@ -13,6 +13,7 @@ class LineFollower(Mode):
     GAIN = 3
 
     FOUND_BOX = False
+    LAST_FOUND_RIGHT = False
 
     INITIAL_SPEED = 60
     TOP_SPEED = 90
@@ -50,7 +51,7 @@ class LineFollower(Mode):
                 self.drivebase.stop()
                 return True
 
-        if reflection == self.BLACK:
+        if reflection <= self.BLACK:
             self.speed = self.INITIAL_SPEED
             if not self.find_line_direct():
                 self.hub.speaker.beep(frequency=10000)
@@ -107,45 +108,27 @@ class LineFollower(Mode):
 
     def find_line_direct(self):
 
-        if self.turn_and_find_line(300, 2100, True):
-            return True
-
-        if self.turn_and_find_line(300, 4000, False):
-            return True
+        if LAST_FOUND_RIGHT:
+            if self.turn_and_find_line(300, 2100, True):
+                LAST_FOUND_RIGHT = True
+                return True
+            elif self.turn_and_find_line(300, 4000, False):
+                LAST_FOUND_RIGHT = False
+                return True
+        
+        else:
+            if self.turn_and_find_line(300, 2100, False):
+                LAST_FOUND_RIGHT = False
+                return True
+            elif self.turn_and_find_line(300, 4000, True):
+                LAST_FOUND_RIGHT = True
+                return True
 
         self.right_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
         self.left_motor.run_time(500, 1400, then=Stop.HOLD, wait=True)
         return False
 
-    def find_line_drivebase(self):
-        self.drivebase.stop()
-        self.hub.screen.print(self.drivebase.heading_control.pid())
-        self.hub.screen.print(self.drivebase.heading_control.limits())
-        degrees = 0
-
-        while degrees < self.INITIAL_TURN:
-            self.drivebase.turn(self.STEP_SIZE)
-            degrees += self.STEP_SIZE
-            if self.color_sensor.reflection() > self.THRESHOLD + 3:
-                return True
-        self.drivebase.turn(-self.INITIAL_TURN)
-        degrees = 0
-        while degrees > -90:
-            self.drivebase.turn(-self.STEP_SIZE)
-            degrees -= self.STEP_SIZE
-            if self.color_sensor.reflection() > self.THRESHOLD + 3:
-                return True
-        self.drivebase.turn(90)
-        degrees = 0
-        while degrees < 90:
-            self.drivebase.turn(self.STEP_SIZE)
-            degrees += self.STEP_SIZE
-
-            if self.color_sensor.reflection() > self.THRESHOLD + 3:
-                return True
-        self.drivebase.turn(-90)
-        return False
-
+    
     def run(self):
         while Button.CENTER not in self.hub.buttons.pressed():
             if self.follow_line():
