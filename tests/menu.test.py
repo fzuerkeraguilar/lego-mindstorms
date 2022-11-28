@@ -11,9 +11,9 @@ def test_default_value():
     button_data.add_point([Button.RIGHT])
     brick.buttons._set(button_data)
 
-    modes = [("Default", 42)]
+    modes = [("Default", 42, None)]
     menu = Menu(brick, modes)
-    result = menu.show()
+    result, _ = menu.show()
     assert_equals(42, result)
 
 
@@ -35,9 +35,9 @@ def test_select_sequence(params):
     button_data.add_points(sequence)
     brick.buttons._set(button_data)
 
-    modes = [("First", 1), ("Second", 2), ("Third", 3)]
+    modes = [("First", 1, None), ("Second", 2, None), ("Third", 3, None)]
     menu = Menu(brick, modes)
-    result = menu.show()
+    result, _ = menu.show()
     assert_equals(expect, result)
 
 
@@ -47,7 +47,17 @@ def test_arbitrary_data():
     button_data.add_points([[Button.RIGHT]])
     brick.buttons._set(button_data)
 
-    modes = [("Default", brick)]
+    modes = [("Default", brick, None)]
     menu = Menu(brick, modes)
-    result = menu.show()
+    result, _ = menu.show()
     assert_equals(brick, result)
+
+def test_autoselect():
+    menu = Menu(EV3Brick(), [("One", 1, None), ("Two", 2, None)])
+    result, _ = menu.show(autoselect=1)
+    assert_equals(2, result)
+
+def test_next():
+    menu = Menu(EV3Brick(), [("One", 1, 2), ("Two", 2, 3)])
+    _, next_mode = menu.show(autoselect=1)
+    assert_equals(3, next_mode)

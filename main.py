@@ -47,6 +47,7 @@ class Main:
                     self.distance_sensor,
                     self.config,
                 ),
+                1
             ),
             (
                 "Box Pusher",
@@ -56,6 +57,7 @@ class Main:
                     self.r_touch_sensor,
                     self.config,
                 ),
+                2
             ),
             (
                 "Bridge Crosser",
@@ -64,6 +66,7 @@ class Main:
                     self.distance_sensor,
                     self.config,
                 ),
+                3
             ),
             (
                 "Point Finder",
@@ -72,6 +75,7 @@ class Main:
                     self.distance_sensor,
                     self.config,
                 ),
+                None
             ),
             (
                 "Debug",
@@ -81,21 +85,25 @@ class Main:
                     self.r_touch_sensor,
                     self.config,
                 ),
+                None
             ),
             (
                 "Calibration",
                 Calibration(self.l_motor, self.r_motor, self.color_sensor),
+                None
             ),
         ]
 
         menu = Menu(self.ev3, modes)
+        next_program = None
         while True:
-            program = menu.show()
+            program, next_program = menu.show(autoselect=next_program)
 
             if program == None:
                 return
             else:
-                program.run()
+                if program.run() == False:
+                    next_program = None
 
 
 if __name__ == "__main__":
