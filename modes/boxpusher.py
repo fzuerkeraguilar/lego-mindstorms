@@ -29,8 +29,8 @@ class BoxPusher(Mode):
         self.touch_sensor = touch_sensor
 
     def run(self):
-        self.find_start_pos()
-        self.push_box()
+        # self.find_start_pos()
+        # self.push_box()
         self.find_end_pos()
 
     def find_start_pos(self):
@@ -77,10 +77,10 @@ class BoxPusher(Mode):
         self.drivebase.straight(-50)  # set back
         self.drivebase.turn(-90)
         self.drive_until_line()
+        self.drivebase.straight(110)
         self.drivebase.turn(-90)
         self.distance_sensor.set_angle(self.LEFT)
-        self.drive_guided_straight(100, 385)
-        # TODO: drive until blue line detected
+        self.drive_guided_straight(2000, 500) # finds blue line as well
 
     def drive_guided_straight(
         self, distance, wall_distance, speed=INITIAL_SPEED, bias=DISTANCE_BIAS
@@ -101,6 +101,11 @@ class BoxPusher(Mode):
             turn_rate = min(controller.correction(current_distance), 3)
             self.drivebase.drive(speed, turn_rate)
             self.hub.screen.print(turn_rate)
+            
+            rgb = self.color_sensor.rgb()
+            if rgb[0] < 10 and rgb[1] < 30 and rgb[2] > 25:
+                self.hub.speaker.beep()
+                break
 
         self.drivebase.stop()
 
