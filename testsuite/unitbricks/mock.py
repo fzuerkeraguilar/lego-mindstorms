@@ -1,8 +1,9 @@
 from unitbricks import get_time
 import random
 
+
 class MockData:
-    def __init__(self, default_data = None):
+    def __init__(self, default_data=None):
         self._data = []
         self._default_data = None
 
@@ -17,8 +18,9 @@ class MockData:
     def add_points(self, points):
         self._data.extend(points)
 
+
 class TimedMockData:
-    def __init__(self, default_data = None):
+    def __init__(self, default_data=None):
         self._data = []
         self._default_data = default_data
 
@@ -39,12 +41,14 @@ class TimedMockData:
             else:
                 return self._data[0][1]
 
+
 class StaticMockData:
     def __init__(self, value):
         self._value = value
 
     def get(self):
         return self._value
+
 
 class Jitter:
     def __init__(self, jitter, data):

@@ -1,6 +1,7 @@
 from pybricks.parameters import Button
 from pybricks.tools import wait
 
+
 class Menu:
     def __init__(self, hub, modes):
         # @param hub: ev3hub
@@ -30,4 +31,3 @@ class Menu:
 
             elif Button.RIGHT in buttons or Button.CENTER in buttons:
                 return self.modes[active_mode][1]
-

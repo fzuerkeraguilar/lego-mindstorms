@@ -9,10 +9,8 @@ class PointFinder(Mode):
     INITIAL_SPEED = 100
     INITIAL_SIDE_LENGTH = 1000
 
-    def __init__(
-        self, ev3_hub, drivebase, color_sensor, distance_sensor, speed=INITIAL_SPEED
-    ):
-        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
+    def __init__(self, color_sensor, distance_sensor, config, speed=INITIAL_SPEED):
+        super().__init__(color_sensor, distance_sensor, config, speed)
 
     def circle_search(self):
         red_found = False

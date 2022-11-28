@@ -4,6 +4,7 @@ from pybricks.parameters import Button
 from unitbricks.mock import MockData
 from unitbricks.assertion import assert_equals
 
+
 def test_default_value():
     brick = EV3Brick()
     button_data = MockData()
@@ -15,23 +16,14 @@ def test_default_value():
     result = menu.show()
     assert_equals(42, result)
 
+
 def params_test_select_sequence():
     tests = []
-    tests.append((
-        3, [[Button.DOWN], [Button.DOWN], [Button.RIGHT]]
-    ))
-    tests.append((
-        1, [[Button.DOWN], [Button.UP], [Button.RIGHT]]
-    ))
-    tests.append((
-        2, [[Button.UP], [Button.UP], [Button.RIGHT]]
-    ))
-    tests.append((
-        1, [[Button.DOWN], [Button.DOWN], [Button.DOWN], [Button.RIGHT]]
-    ))
-    tests.append((
-        None, [[Button.LEFT]]
-    ))
+    tests.append((3, [[Button.DOWN], [Button.DOWN], [Button.RIGHT]]))
+    tests.append((1, [[Button.DOWN], [Button.UP], [Button.RIGHT]]))
+    tests.append((2, [[Button.UP], [Button.UP], [Button.RIGHT]]))
+    tests.append((1, [[Button.DOWN], [Button.DOWN], [Button.DOWN], [Button.RIGHT]]))
+    tests.append((None, [[Button.LEFT]]))
     return tests
 
 
@@ -47,6 +39,7 @@ def test_select_sequence(params):
     menu = Menu(brick, modes)
     result = menu.show()
     assert_equals(expect, result)
+
 
 def test_arbitrary_data():
     brick = EV3Brick()

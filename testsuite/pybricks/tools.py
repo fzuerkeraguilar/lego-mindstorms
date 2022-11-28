@@ -1,7 +1,9 @@
 from unitbricks import elapse, get_time
 
+
 def wait(time):
     elapse(time)
+
 
 class StopWatch:
     def __init__(self):
@@ -23,8 +25,9 @@ class StopWatch:
         else:
             return self._paused_at - self._start_time
 
+
 class DataLog:
-    def __init__(*headers, name='log', timestamp=True, extension='csv', append=False):
+    def __init__(*headers, name="log", timestamp=True, extension="csv", append=False):
         pass
 
     def log(*values):

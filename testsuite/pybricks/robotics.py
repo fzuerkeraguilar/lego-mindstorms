@@ -1,6 +1,7 @@
 import math
 from unitbricks import elapse, get_time
 
+
 class DriveBase:
     def __init__(self, left_motor, right_motor, wheel_diameter, axle_track):
         self._left_motor = left_motor
@@ -22,7 +23,9 @@ class DriveBase:
         self._current_turn_rate = None
         self._start_time = None
 
-    def settings(self, straight_speed, straight_acceleration, turn_rate, turn_acceleration):
+    def settings(
+        self, straight_speed, straight_acceleration, turn_rate, turn_acceleration
+    ):
         # NOTE: acceleration not supported by mock
         self._straight_speed = straight_speed
         self._turn_rate = turn_rate
@@ -59,7 +62,7 @@ class DriveBase:
         elapse(time)
 
     def drive(self, drive_speed, turn_rate):
-        self._auto_mode() # to store driven distance and angle
+        self._auto_mode()  # to store driven distance and angle
         self._start_time = get_time()
         self._current_speed = drive_speed
         self._current_turn_rate = turn_rate
@@ -71,15 +74,21 @@ class DriveBase:
 
     def distance(self):
         if self._current_speed != None:
-            return self._distance + self._current_speed * (get_time() - self._start_time) / 1000
+            return (
+                self._distance
+                + self._current_speed * (get_time() - self._start_time) / 1000
+            )
         else:
-            return self._distance # TODO: manual mode distance
+            return self._distance  # TODO: manual mode distance
 
     def angle(self):
         if self._current_turn_rate != None:
-            return self._angle + self._current_turn_rate * (get_time() - self._start_time) / 1000
+            return (
+                self._angle
+                + self._current_turn_rate * (get_time() - self._start_time) / 1000
+            )
         else:
-            return self._angle # TODO: manual mode distance
+            return self._angle  # TODO: manual mode distance
 
     def state(self):
         speed = 0

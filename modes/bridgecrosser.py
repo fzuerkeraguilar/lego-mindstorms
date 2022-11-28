@@ -10,10 +10,9 @@ class BridgeCrosser(Mode):
     RAMP_ANGLE = 15
     INITIAL_SPEED = 50
 
-    def __init__(
-        self, ev3_hub, drivebase, color_sensor, distance_sensor, speed=INITIAL_SPEED
-    ):
-        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
+    def __init__(self, color_sensor, distance_sensor, config, speed=INITIAL_SPEED):
+        super().__init__(color_sensor, distance_sensor, config, speed)
+        self.drivebase = config.get_drivebase(clean=True)
 
     def run(self):
         self.drivebase.straight(1050)
