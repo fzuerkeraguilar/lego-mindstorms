@@ -57,9 +57,9 @@ class LineFollower(Mode):
                 self.hub.speaker.beep(frequency=10000)
                 self.drivebase.straight(150)
 
-        # self.speed = min(self.TOP_SPEED, self.speed + 1)
-        # if abs(deviation) > 7:
-        #     self.speed = self.INITIAL_SPEED
+        self.speed = min(self.TOP_SPEED, self.speed + 1)
+        if abs(deviation) > 7:
+            self.speed = max(self.INITIAL_SPEED, self.speed / 2)
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
