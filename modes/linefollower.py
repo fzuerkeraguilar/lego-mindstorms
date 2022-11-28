@@ -31,7 +31,8 @@ class LineFollower(Mode):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.r_motor = self.drivebase.right
         self.l_motor = self.drivebase.left
-        self.BLACK, self.WHITE = self.config.get_bw()
+        self.config = config
+        self.WHITE, self.BLACK = self.config.get_wb()
         self.THRESHOLD = (self.BLACK + self.WHITE) / 2
 
     def follow_line(self):
@@ -113,8 +114,8 @@ class LineFollower(Mode):
             elif self.turn_and_find_line(300, 4000, False):
                 self.LAST_FOUND_RIGHT = False
                 return True
-            self.right_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
-            self.left_motor.run_time(500, 1400, then=Stop.HOLD, wait=True)
+            self.r_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
+            self.l_motor.run_time(500, 1400, then=Stop.HOLD, wait=True)
         else:
             if self.turn_and_find_line(300, 2100, False):
                 self.LAST_FOUND_RIGHT = False
@@ -122,8 +123,8 @@ class LineFollower(Mode):
             elif self.turn_and_find_line(300, 4000, True):
                 self.LAST_FOUND_RIGHT = True
                 return True
-            self.right_motor.run_time(500, 1400, then=Stop.HOLD, wait=False)
-            self.left_motor.run_time(-500, 1400, then=Stop.HOLD, wait=True)
+            self.r_motor.run_time(500, 1400, then=Stop.HOLD, wait=False)
+            self.l_motor.run_time(-500, 1400, then=Stop.HOLD, wait=True)
 
         return False
 

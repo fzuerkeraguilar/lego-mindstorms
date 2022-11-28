@@ -81,7 +81,8 @@ class Main:
                     self.r_touch_sensor,
                     self.config,
                 ),
-            )(
+            ),
+            (
                 "Calibration",
                 Calibration(self.l_motor, self.r_motor, self.color_sensor),
             ),
