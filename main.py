@@ -20,6 +20,7 @@ from modes.bridgecrosser import BridgeCrosser
 from modes.pointfinder import PointFinder
 from modes.debug import Debug
 from turning_distance_sensor import TurningDistanceSensor
+from menu import Menu
 
 
 class Main:
