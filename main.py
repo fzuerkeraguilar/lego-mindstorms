@@ -55,7 +55,7 @@ class Main:
                 BoxPusher(
                     self.color_sensor,
                     self.distance_sensor,
-                    self.r_touch_sensor,
+                    self.touch_sensor,
                     self.config,
                 ),
                 2
@@ -83,7 +83,7 @@ class Main:
                 Debug(
                     self.color_sensor,
                     self.distance_sensor,
-                    self.r_touch_sensor,
+                    self.touch_sensor,
                     self.config,
                 ),
                 None
