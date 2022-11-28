@@ -32,7 +32,7 @@ class Main:
         self.color_sensor = ColorSensor(Port.S1)
         self.r_touch_sensor = TouchSensor(Port.S2)
         self.distance_sensor = TurningDistanceSensor(Port.C, Port.S4)
-        self.config = Calibration(self.hub, self.l_motor, self.r_motor)
+        self.config = Calibration(self.ev3, self.l_motor, self.r_motor, self.color_sensor)
 
     def main(self):
         # Menu to select the program to run
