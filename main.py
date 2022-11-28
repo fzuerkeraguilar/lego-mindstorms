@@ -103,9 +103,14 @@ class Main:
             if program == None:
                 return
             else:
-                if program.run() == False:
+                try:
+                    if program.run() == False:
+                        next_program = None
+                except Exception as e:
+                    self.ev3.speaker.beep()
+                    self.ev3.screen.print(e)
+                    wait(5000)
                     next_program = None
-
 
 if __name__ == "__main__":
     Main().main()
