@@ -21,19 +21,16 @@ class PointFinder(Mode):
             while self.distance_sensor.distance() > stop_distance:
                 self.drivebase.drive(self.INITIAL_SPEED, 0)
                 rgb = self.color_sensor.rgb()
-                if rgb[0] > 10 and rgb[1] < 20 and rgb[2] < 20 and not red_found:
+                if not red_found and rgb[0] > 10 and rgb[1] < 20 and rgb[2] < 20:
                     red_found = True
                     self.hub.speaker.beep()
-                    if red_found and white_found:
-                        self.drivebase.stop()
-                        return
-                if rgb[0] > 10 and rgb[1] > 40 and rgb[2] > 40 and not white_found:
+                if not white_found and rgb[0] > 10 and rgb[1] > 40 and rgb[2] > 40:
                     white_found = True
                     self.hub.speaker.beep()
-                    if red_found and white_found:
-                        self.drivebase.stop()
-                        return
-            self.drivebase.turn(-87)
+                if red_found and white_found:
+                    self.drivebase.stop()
+                    return
+            self.drivebase.turn(-90)
 
         while stop_distance < 500:
             stop_distance += 70
@@ -53,7 +50,7 @@ class PointFinder(Mode):
                         if red_found and white_found:
                             self.drivebase.stop()
                             return
-                self.drivebase.turn(-87)
+                self.drivebase.turn(-90)
 
     def run(self):
         self.circle_search()
