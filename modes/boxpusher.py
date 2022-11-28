@@ -25,7 +25,7 @@ class BoxPusher(Mode):
         config,
         speed=INITIAL_SPEED,
     ):
-        super().__init__(color_sensor, distance_senor, config, speed)
+        super().__init__(color_sensor, distance_sensor, config, speed)
         self.touch_sensor = touch_sensor
 
     def run(self):

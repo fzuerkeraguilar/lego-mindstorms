@@ -182,11 +182,3 @@ class Calibration:
                         json.dump(self.config, f)
                 elif option == 4:
                     break
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> a21ece6 (Adjust screen printing)
-=======
-
->>>>>>> 102861d4504bc0ddbef8082b0d351cab2b5a8a84

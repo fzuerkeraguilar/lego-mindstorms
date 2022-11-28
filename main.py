@@ -81,19 +81,21 @@ class Main:
                     self.r_touch_sensor,
                     self.config,
                 ),
-            )(
+            ),
+            (
                 "Calibration",
                 Calibration(self.l_motor, self.r_motor, self.color_sensor),
             ),
         ]
 
         menu = Menu(self.ev3, modes)
-        program = menu.show()
+        while True:
+            program = menu.show()
 
-        if program == None:
-            return
-        else:
-            program.run()
+            if program == None:
+                return
+            else:
+                program.run()
 
 
 if __name__ == "__main__":
