@@ -7,8 +7,13 @@ import json
 
 
 class Calibration:
+<<<<<<< HEAD
     def __init__(self, l_motor, r_motor, color_sensor):
         self.hub = EV3Brick()
+=======
+    def __init__(self, ev3_hub, l_motor, r_motor, color_sensor):
+        self.hub = ev3_hub
+>>>>>>> a21ece6 (Adjust screen printing)
         self.left_motor = l_motor
         self.right_motor = r_motor
         self.color_sensor = color_sensor
@@ -119,7 +124,13 @@ class Calibration:
         while True:
             self.hub.screen.clear()
             self.hub.screen.print(
+<<<<<<< HEAD
                 "Wheel dia.: " + str(wheel_diameter + delta_wheel_diameter) + "mm"
+=======
+                "Wheel dia.: "
+                + str(wheel_diameter + delta_wheel_diameter)
+                + "mm"
+>>>>>>> a21ece6 (Adjust screen printing)
             )
             self.hub.screen.print("Original: " + str(wheel_diameter) + "mm")
             wait(150)
