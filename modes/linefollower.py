@@ -33,6 +33,7 @@ class LineFollower(Mode):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.r_motor = self.drivebase.right
         self.l_motor = self.drivebase.left
+        self.touch_sensor = touch_sensor
         self.config = config
         self.WHITE, self.BLACK = self.config.get_wb()
         self.THRESHOLD = (self.BLACK + self.WHITE) / 2
