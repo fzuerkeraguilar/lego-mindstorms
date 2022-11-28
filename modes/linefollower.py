@@ -124,9 +124,9 @@ class LineFollower(Mode):
             elif self.turn_and_find_line(300, 4000, True):
                 self.LAST_FOUND_RIGHT = True
                 return True
+            self.right_motor.run_time(500, 1400, then=Stop.HOLD, wait=False)
+            self.left_motor.run_time(-500, 1400, then=Stop.HOLD, wait=True)
 
-        self.right_motor.run_time(500, 1400, then=Stop.HOLD, wait=False)
-        self.left_motor.run_time(-500, 1400, then=Stop.HOLD, wait=True)
         return False
 
     
