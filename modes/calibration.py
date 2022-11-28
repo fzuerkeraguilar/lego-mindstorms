@@ -101,6 +101,12 @@ class Calibration:
             wait(150)
             buttons = self.hub.buttons.pressed()
             if Button.CENTER in buttons:
+                self.drivebase = DriveBase(
+                    self.left_motor,
+                    self.right_motor,
+                    wheel_diameter + delta_wheel_diameter,
+                    wheel_base + delta_wheel_base,
+                )
                 self.drivebase.turn(360)
             if Button.UP in buttons:
                 delta_wheel_base += 1
@@ -121,6 +127,12 @@ class Calibration:
             wait(150)
             buttons = self.hub.buttons.pressed()
             if Button.CENTER in buttons:
+                self.drivebase = DriveBase(
+                    self.left_motor,
+                    self.right_motor,
+                    wheel_diameter + delta_wheel_diameter,
+                    wheel_base + delta_wheel_base,
+                )
                 self.drivebase.straight(1000)
             if Button.UP in buttons:
                 delta_wheel_diameter += 1
