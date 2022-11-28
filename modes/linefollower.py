@@ -108,20 +108,20 @@ class LineFollower(Mode):
 
     def find_line_direct(self):
 
-        if LAST_FOUND_RIGHT:
+        if self.LAST_FOUND_RIGHT:
             if self.turn_and_find_line(300, 2100, True):
-                LAST_FOUND_RIGHT = True
+                self.LAST_FOUND_RIGHT = True
                 return True
             elif self.turn_and_find_line(300, 4000, False):
-                LAST_FOUND_RIGHT = False
+                self.LAST_FOUND_RIGHT = False
                 return True
         
         else:
             if self.turn_and_find_line(300, 2100, False):
-                LAST_FOUND_RIGHT = False
+                self.LAST_FOUND_RIGHT = False
                 return True
             elif self.turn_and_find_line(300, 4000, True):
-                LAST_FOUND_RIGHT = True
+                self.LAST_FOUND_RIGHT = True
                 return True
 
         self.right_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
