@@ -4,7 +4,7 @@ import sys
 
 TEST_PATH = "tests"
 args = sys.argv
-args.pop(0) # first element is command name
+args.pop(0)  # first element is command name
 
 if len(args) > 0:
     for arg in args:

@@ -19,18 +19,14 @@ class BoxPusher(Mode):
 
     def __init__(
         self,
-        ev3_hub,
-        drivebase,
         color_sensor,
         distance_sensor,
         touch_sensor,
-        right_motor,
-        left_motor,
+        config,
         speed=INITIAL_SPEED,
     ):
-        super().__init__(ev3_hub, drivebase, color_sensor, distance_sensor, speed)
-        self.left_motor = left_motor
-        self.right_motor = right_motor
+        super().__init__(color_sensor, distance_sensor, config, speed)
+        self.touch_sensor = touch_sensor
 
     def run(self):
         self.find_start_pos()

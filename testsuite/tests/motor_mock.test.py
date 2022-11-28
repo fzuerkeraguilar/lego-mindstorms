@@ -1,14 +1,16 @@
 from turning_distance_sensor import TurningDistanceSensor
 from pybricks.parameters import Port, Button, Direction
-from pybricks.ev3devices import (Motor, UltrasonicSensor)
+from pybricks.ev3devices import Motor, UltrasonicSensor
 from unitbricks.mock import StaticMockData
 from unitbricks.assertion import assert_equals
 from unitbricks import elapse, get_time
+
 
 def test_motor():
     motor = Motor(None)
     assert_equals(0, motor.speed())
     assert_equals(0, motor.angle())
+
 
 def test_reset_angle():
     motor = Motor(None)
@@ -28,6 +30,7 @@ def test_reset_angle():
     motor.run(10)
     elapse(1 * 1000)
     assert_equals(10, motor.angle())
+
 
 def test_stop():
     motor = Motor(None)
@@ -49,6 +52,7 @@ def test_stop():
     assert_equals(20, motor.angle())
     assert_equals(10, motor.speed())
 
+
 def test_run_time():
     motor = Motor(None)
     assert_equals(0, motor.speed())
@@ -68,6 +72,7 @@ def test_run_time():
     assert_equals(0, motor.speed())
     assert_equals(3 * 1000, get_time())
     assert_equals(30, motor.angle())
+
 
 def test_run_angle():
     motor = Motor(None)
@@ -89,6 +94,7 @@ def test_run_angle():
     assert_equals(0, motor.speed())
     assert_equals(20, motor.angle())
 
+
 def test_run_negative():
     motor = Motor(None)
     assert_equals(0, motor.speed())
@@ -101,7 +107,7 @@ def test_run_negative():
     elapse(1 * 1000)
     assert_equals(-10, motor.speed())
     assert_equals(-10, motor.angle())
-    
+
     motor.run(10)
     assert_equals(10, motor.speed())
     assert_equals(-10, motor.angle())
@@ -109,6 +115,7 @@ def test_run_negative():
     elapse(1 * 1000)
     assert_equals(10, motor.speed())
     assert_equals(0, motor.angle())
+
 
 def test_run_time_negative():
     motor = Motor(None)
@@ -126,6 +133,7 @@ def test_run_time_negative():
     motor.run_time(-10, 1 * 1000, wait=True)
     assert_equals(0, motor.speed())
     assert_equals(-20, motor.angle())
+
 
 def test_run_angle_negative():
     motor = Motor(None)
@@ -145,6 +153,7 @@ def test_run_angle_negative():
     assert_equals(0, motor.speed())
     assert_equals(-20, motor.angle())
     assert_equals(2.5 * 1000, get_time())
+
 
 def test_run_target():
     motor = Motor(None)
