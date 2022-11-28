@@ -26,6 +26,7 @@ class LineFollower(Mode):
         self,
         color_sensor,
         distance_sensor,
+        touch_sensor,
         config,
         speed=INITIAL_SPEED,
     ):
@@ -37,7 +38,7 @@ class LineFollower(Mode):
         self.THRESHOLD = (self.BLACK + self.WHITE) / 2
 
     def follow_line(self):
-        if self.distance_sensor.distance() < 100:
+        if self.touch_sensor.pressed():
             self.avoid_obstacle()
 
         # Calculate the deviation from the threshold.
@@ -67,6 +68,7 @@ class LineFollower(Mode):
 
     def avoid_obstacle(self):
         self.drivebase.stop()
+        self.drivebase.straight(-50)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)

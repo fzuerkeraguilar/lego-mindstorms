@@ -32,7 +32,7 @@ class Main:
         self.distance_motor = Motor(Port.C)
         self.ultrasonic_sensor = UltrasonicSensor(Port.S4)
         self.color_sensor = ColorSensor(Port.S1)
-        self.r_touch_sensor = TouchSensor(Port.S2)
+        self.touch_sensor = TouchSensor(Port.S2)
         self.distance_sensor = TurningDistanceSensor(
             self.distance_motor, self.ultrasonic_sensor
         )
@@ -45,6 +45,7 @@ class Main:
                 LineFollower(
                     self.color_sensor,
                     self.distance_sensor,
+                    self.touch_sensor,
                     self.config,
                 ),
                 1
