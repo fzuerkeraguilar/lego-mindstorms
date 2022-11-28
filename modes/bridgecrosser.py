@@ -19,33 +19,52 @@ class BridgeCrosser(Mode):
 
     def run(self):
         self.drive_up()
-        return
-
-        self.drivebase.straight(1050)
         self.drivebase.turn(-90)
-        self.drivebase.straight(1260)
+        self.drive_straight()
         self.drivebase.turn(-90)
-        self.drivebase.straight(1000)
+        self.drive_down()
 
     def drive_up(self):
-        self.distance_sensor.set_angle(-90)
-        target_wall_distance = self.distance_sensor.distance()
+        self.drivebase.straight(1050)
 
-        controller = PController(target_wall_distance, -0.1)
-        speed = 50
+    def drive_straight(self):
+        target_distance = 1260
+        speed = 100
 
         self.drivebase.reset()
-        while self.drivebase.distance() < 600:
-            # correct angle to drive straight
-            current_wall_distance = self.distance_sensor.distance()
-            turn_rate = min(controller.correction(current_wall_distance), 2)
-            self.drivebase.drive(speed, turn_rate)
-            self.hub.screen.print(turn_rate)
+        self.drivebase.drive(speed, 0)
 
-        while self.drivebase.distance() < 1050:
-            pass
+        music = self.play_music()
+        
+        while self.drivebase.distance() < target_distance:
+            next(music)
 
         self.drivebase.stop()
 
     def drive_down(self):
         self.drivebase.straight(1000)
+
+    def play_music(self):
+        frequency = [
+            659.25511, 493.8833, 523.25113, 587.32954, 523.25113, 493.8833, 440.0, 440.0, 
+            523.25113, 659.25511, 587.32954, 523.25113, 493.8833, 523.25113, 587.32954, 
+            659.25511, 523.25113, 440.0, 440.0, 440.0, 493.8833, 523.25113, 587.32954, 
+            698.45646, 880.0, 783.99087, 698.45646, 659.25511, 523.25113, 659.25511, 
+            587.32954, 523.25113, 493.8833, 493.8833, 523.25113, 587.32954, 659.25511, 
+            523.25113, 440.0, 440.0
+        ]
+        duration = [
+            406.250, 203.125, 203.125, 406.250, 203.125, 203.125, 406.250, 203.125, 
+            203.125, 406.250, 203.125, 203.125, 609.375, 203.125, 406.250, 406.250, 
+            406.250, 406.250, 203.125, 203.125, 203.125, 203.125, 609.375, 203.125, 
+            406.250, 203.125, 203.125, 609.375, 203.125, 406.250, 203.125, 203.125, 
+            406.250, 203.125, 203.125, 406.250, 406.250, 406.250, 406.250, 406.250
+        ]
+
+        for i in range(0, len(frequency)):
+            self.hub.screen.print("Beep", frequency[i])
+            # self.hub.speaker.beep(frequency[i], duration[i])
+            yield
+        
+        while True:
+            yield
