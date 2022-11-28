@@ -20,6 +20,7 @@ class LineFollower(Mode):
     STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
+    RIGHT_ANGLE_TURN_TIME = 2000
 
     def __init__(
         self,
@@ -108,23 +109,23 @@ class LineFollower(Mode):
     def find_line_direct(self):
 
         if self.LAST_FOUND_RIGHT:
-            if self.turn_and_find_line(300, 2100, True):
+            if self.turn_and_find_line(300,self.RIGHT_ANGLE_TURN_TIME , True):
                 self.LAST_FOUND_RIGHT = True
                 return True
-            elif self.turn_and_find_line(300, 4000, False):
+            elif self.turn_and_find_line(300, 2 * self.RIGHT_ANGLE_TURN_TIME, False):
                 self.LAST_FOUND_RIGHT = False
                 return True
-            self.r_motor.run_time(-500, 1400, then=Stop.HOLD, wait=False)
-            self.l_motor.run_time(500, 1400, then=Stop.HOLD, wait=True)
+            self.r_motor.run_time(-300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=False)
+            self.l_motor.run_time(300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=True)
         else:
-            if self.turn_and_find_line(300, 2100, False):
+            if self.turn_and_find_line(300, self.RIGHT_ANGLE_TURN_TIME, False):
                 self.LAST_FOUND_RIGHT = False
                 return True
-            elif self.turn_and_find_line(300, 4000, True):
+            elif self.turn_and_find_line(300, 2 * self.RIGHT_ANGLE_TURN_TIME, True):
                 self.LAST_FOUND_RIGHT = True
                 return True
-            self.r_motor.run_time(300, 1400, then=Stop.HOLD, wait=False)
-            self.l_motor.run_time(-300, 1400, then=Stop.HOLD, wait=True)
+            self.r_motor.run_time(300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=False)
+            self.l_motor.run_time(-300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=True)
 
         return False
 
