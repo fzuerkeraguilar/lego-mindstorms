@@ -20,11 +20,11 @@ class PointFinder(Mode):
         for i in range(0, 3):
             while self.distance_sensor.distance() > stop_distance:
                 self.drivebase.drive(self.INITIAL_SPEED, 0)
-                rgb = self.color_sensor.rgb()
-                if not red_found and rgb[0] > 10 and rgb[1] < 20 and rgb[2] < 20:
+                color = self.color_sensor.color()
+                if not red_found and color == Color.RED:
                     red_found = True
                     self.hub.speaker.beep()
-                if not white_found and rgb[0] > 10 and rgb[1] > 40 and rgb[2] > 40:
+                if not white_found and color == Color.WHITE:
                     white_found = True
                     self.hub.speaker.beep()
                 if red_found and white_found:
