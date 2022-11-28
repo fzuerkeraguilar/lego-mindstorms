@@ -36,6 +36,7 @@ class Main:
         self.distance_sensor = TurningDistanceSensor(
             self.distance_motor, self.ultrasonic_sensor
         )
+        self.config = Calibration(self.l_motor, self.r_motor, self.color_sensor)
 
     def main(self):
         modes = [

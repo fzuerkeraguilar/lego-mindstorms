@@ -119,7 +119,9 @@ class Calibration:
         while True:
             self.hub.screen.clear()
             self.hub.screen.print(
-                "Wheel dia.: " + str(wheel_diameter + delta_wheel_diameter) + "mm"
+                "Wheel dia.: "
+                + str(wheel_diameter + delta_wheel_diameter)
+                + "mm"
             )
             self.hub.screen.print("Original: " + str(wheel_diameter) + "mm")
             wait(150)
@@ -180,3 +182,7 @@ class Calibration:
                         json.dump(self.config, f)
                 elif option == 4:
                     break
+<<<<<<< HEAD
+=======
+
+>>>>>>> a21ece6 (Adjust screen printing)
