@@ -49,7 +49,7 @@ class LineFollower(Mode):
             if rgb[0] < 10 and rgb[1] < 30 and rgb[2] > 25:
                 self.hub.speaker.beep()
                 self.drivebase.stop()
-                return True
+                return False
 
         if reflection <= self.BLACK:
             self.speed = self.INITIAL_SPEED
@@ -63,7 +63,7 @@ class LineFollower(Mode):
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
-        return False
+        return True
 
     def avoid_obstacle(self):
         self.drivebase.stop()
@@ -124,13 +124,13 @@ class LineFollower(Mode):
             elif self.turn_and_find_line(300, 4000, True):
                 self.LAST_FOUND_RIGHT = True
                 return True
-            self.right_motor.run_time(500, 1400, then=Stop.HOLD, wait=False)
-            self.left_motor.run_time(-500, 1400, then=Stop.HOLD, wait=True)
+            self.right_motor.run_time(300, 1400, then=Stop.HOLD, wait=False)
+            self.left_motor.run_time(-300, 1400, then=Stop.HOLD, wait=True)
 
         return False
 
     
     def run(self):
         while Button.CENTER not in self.hub.buttons.pressed():
-            if self.follow_line():
+            if not self.follow_line():
                 break
