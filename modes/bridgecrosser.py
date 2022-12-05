@@ -1,7 +1,7 @@
 from pybricks.hubs import EV3Brick
 from pybricks.parameters import Color
 from pybricks.robotics import DriveBase
-from pybricks.ev3devices import TouchSensor, ColorSensor, GyroSensor
+from pybricks.ev3devices import TouchSensor, ColorSensor
 from modes.mode import Mode
 from controller.pcontroller import PController
 

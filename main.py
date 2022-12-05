@@ -5,8 +5,7 @@ from pybricks.ev3devices import (
     TouchSensor,
     ColorSensor,
     InfraredSensor,
-    UltrasonicSensor,
-    GyroSensor,
+    UltrasonicSensor
 )
 from pybricks.parameters import Port, Button
 from pybricks.tools import wait
