@@ -31,7 +31,7 @@ class BoxPusher(Mode):
     def run(self):
         self.find_start_pos()
         self.push_box()
-        self.find_end_pos()
+        self.find_end_pos2()
 
     def find_start_pos(self):
         self.hub.screen.print("find start pos")
@@ -81,6 +81,28 @@ class BoxPusher(Mode):
         self.drivebase.turn(-90)
         self.distance_sensor.set_angle(self.LEFT)
         self.drive_guided_straight(2000, 500) # finds blue line as well
+    
+    def find_end_pos2(self):
+        self.hub.screen.print("find end pos")
+        self.distance_sensor.set_angle(0)
+        self.hub.speaker.beep()
+        self.drivebase.straight(-50)
+        self.drivebase.turn(90)
+        self.drivebase.straight(100)
+        self.drivebase.straight(-50)
+        self.drivebase.turn(90)
+        while self.touch_sensor.pressed() == False:
+            self.drivebase.drive(100, 0)
+        self.drivebase.stop()
+        self.drivebase.straight(-50)
+        self.drivebase.turn(90)
+        while self.distance_sensor.distance() > 500:
+            self.drivebase.drive(100, 0)
+        self.drivebase.stop()
+        self.drivebase.turn(-90)
+        while self.color_sensor.color() != Color.BLUE:
+            self.drivebase.drive(50, 0)
+        self.drivebase.stop()   
 
     def drive_guided_straight(
         self, distance, wall_distance, speed=INITIAL_SPEED, bias=DISTANCE_BIAS
@@ -136,7 +158,7 @@ class BoxPusher(Mode):
             pass
 
         # wait(overshoot_time) # keep driving for overshoot_time.
-        self.drivebase.straight(150)
+        self.drivebase.straight(180)
         self.drivebase.stop()
 
     def drive_until_box_lost(
