@@ -69,7 +69,7 @@ class LineFollower(Mode):
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(370)
+        self.drivebase.straight(360)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
@@ -126,6 +126,7 @@ class LineFollower(Mode):
         return False
 
     def run(self):
+        self.distance_sensor.set_angle(75)
         while Button.CENTER not in self.hub.buttons.pressed():
             if not self.follow_line():
                 break
