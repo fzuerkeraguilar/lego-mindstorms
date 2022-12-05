@@ -15,7 +15,7 @@ class LineFollower(Mode):
     LAST_FOUND_RIGHT = False
 
     INITIAL_SPEED = 60
-    TOP_SPEED = 100
+    TOP_SPEED = 150
     STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
@@ -53,11 +53,17 @@ class LineFollower(Mode):
                 return False
 
             if not self.find_line_direct():
-                self.drivebase.straight(150)
+                self.drivebase.straight(120)
 
         self.speed = min(self.TOP_SPEED, self.speed + 1)
-        if abs(deviation) > 7:
+        if abs(deviation) > 15:
             self.speed = max(self.INITIAL_SPEED, self.speed / 2)
+        self.config.hub.screen.print(self.speed, deviation)
+        
+        if deviation > 10:
+            self.LAST_FOUND_RIGHT = True
+        elif deviation < -10:
+            self.LAST_FOUND_RIGHT = False
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
