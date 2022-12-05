@@ -29,8 +29,8 @@ class BoxPusher(Mode):
         self.touch_sensor = touch_sensor
 
     def run(self):
-        # self.find_start_pos()
-        # self.push_box()
+        self.find_start_pos()
+        self.push_box()
         self.find_end_pos()
 
     def find_start_pos(self):
@@ -102,8 +102,7 @@ class BoxPusher(Mode):
             self.drivebase.drive(speed, turn_rate)
             self.hub.screen.print(turn_rate)
             
-            rgb = self.color_sensor.rgb()
-            if rgb[0] < 10 and rgb[1] < 30 and rgb[2] > 25:
+            if self.color_sensor.color() == Color.BLUE:
                 self.hub.speaker.beep()
                 break
 

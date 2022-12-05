@@ -43,20 +43,16 @@ class LineFollower(Mode):
 
         # Calculate the deviation from the threshold.
         reflection = self.color_sensor.reflection()
-        self.hub.screen.print(reflection)
         deviation = reflection - self.THRESHOLD
 
         if reflection <= self.BLACK:
             self.speed = self.INITIAL_SPEED
             # blue line is "Black" for reflection. Check here whether we lost line or found blue line
-            rgb = self.color_sensor.rgb()
-            if rgb[0] < 10 and rgb[1] < 30 and rgb[2] > 25:
-                self.hub.speaker.beep()
+            if self.color_sensor.color() == Color.BLUE:
                 self.drivebase.stop()
                 return False
 
             if not self.find_line_direct():
-                self.hub.speaker.beep(frequency=10000)
                 self.drivebase.straight(150)
 
         self.speed = min(self.TOP_SPEED, self.speed + 1)
@@ -73,10 +69,11 @@ class LineFollower(Mode):
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(400)
+        self.drivebase.straight(370)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
+        self.drivebase.straight(-50)
         self.find_line_direct()
 
     def turn_and_find_line(self, speed, time, turn_right):
@@ -85,12 +82,10 @@ class LineFollower(Mode):
         if turn_right:
             speed_right = -speed
             speed_left = speed
-            self.hub.screen.print("Turn right")
 
         else:
             speed_right = speed
             speed_left = -speed
-            self.hub.screen.print("Turn left")
 
         self.hub.speaker.beep()
         self.drivebase.stop()
@@ -100,7 +95,6 @@ class LineFollower(Mode):
         watch.reset()
         while watch.time() < time + 100:
             if self.color_sensor.reflection() > self.THRESHOLD + 3:
-                self.hub.screen.print("Found line")
                 self.r_motor.stop()
                 self.l_motor.stop()
                 return True
