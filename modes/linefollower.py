@@ -12,7 +12,7 @@ class LineFollower(Mode):
     THRESHOLD = (0.8* BLACK + 1.2 * WHITE) / 2
     GAIN = 3
 
-    LAST_FOUND_RIGHT = False
+    LAST_FOUND_RIGHT = True
 
     INITIAL_SPEED = 40
     TOP_SPEED = 130
