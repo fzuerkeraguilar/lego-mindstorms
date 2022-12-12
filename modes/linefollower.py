@@ -9,7 +9,7 @@ from modes.mode import Mode
 class LineFollower(Mode):
     BLACK = 6
     WHITE = 35
-    THRESHOLD = (BLACK + WHITE) / 2
+    THRESHOLD = (0.8* BLACK + 1.2 * WHITE) // 2
     GAIN = 3
 
     LAST_FOUND_RIGHT = False
@@ -35,7 +35,7 @@ class LineFollower(Mode):
         self.touch_sensor = touch_sensor
         self.config = config
         self.WHITE, self.BLACK = self.config.get_wb()
-        self.THRESHOLD = (self.BLACK + self.WHITE) // 2
+        self.THRESHOLD = (0.8 * self.BLACK + 1.2 * self.WHITE) // 2
 
     def follow_line(self):
         if self.touch_sensor.pressed():
@@ -54,9 +54,10 @@ class LineFollower(Mode):
 
             if not self.find_line_direct():
                 self.bridge_gap()
+
         if abs(deviation) < 5:
             self.speed = min(self.TOP_SPEED, self.speed + 1)
-        if abs(deviation) > 10:
+        elif abs(deviation) > 10:
             self.speed = max(self.INITIAL_SPEED, self.speed - 5)
 
         turn_rate = self.GAIN * deviation
@@ -124,13 +125,13 @@ class LineFollower(Mode):
     def bridge_gap(self):
         self.drivebase.reset()
         self.drivebase.drive(self.TOP_SPEED, 0)
-        while self.drivebase.distance() < 140:
+        while self.drivebase.distance() < 160:
             if self.color_sensor.reflection() > self.THRESHOLD + 3:
                 break
         self.drivebase.stop()
 
     def run(self):
-        self.distance_sensor.set_angle(75)
+        self.distance_sensor.set_angle(70)
         while Button.CENTER not in self.hub.buttons.pressed():
             if not self.follow_line():
                 break
