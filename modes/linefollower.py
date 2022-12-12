@@ -14,8 +14,8 @@ class LineFollower(Mode):
 
     LAST_FOUND_RIGHT = False
 
-    INITIAL_SPEED = 60
-    TOP_SPEED = 150
+    INITIAL_SPEED = 40
+    TOP_SPEED = 130
     STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
@@ -56,14 +56,8 @@ class LineFollower(Mode):
                 self.bridge_gap()
 
         self.speed = min(self.TOP_SPEED, self.speed + 1)
-        if abs(deviation) > 15:
+        if abs(deviation) > 7:
             self.speed = max(self.INITIAL_SPEED, self.speed / 2)
-        self.config.hub.screen.print(self.speed, deviation)
-        
-        if deviation > 10:
-            self.LAST_FOUND_RIGHT = True
-        elif deviation < -10:
-            self.LAST_FOUND_RIGHT = False
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
@@ -75,7 +69,7 @@ class LineFollower(Mode):
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(360)
+        self.drivebase.straight(370)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
@@ -96,11 +90,11 @@ class LineFollower(Mode):
         self.hub.speaker.beep()
         self.drivebase.stop()
 
-        self.r_motor.run_time(speed_right, time, then=Stop.HOLD, wait=False)
-        self.l_motor.run_time(speed_left, time, then=Stop.HOLD, wait=False)
+        self.r_motor.run_time(speed_right, time, then=Stop.BRAKE, wait=False)
+        self.l_motor.run_time(speed_left, time, then=Stop.BRAKE, wait=False)
         watch.reset()
         while watch.time() < time + 100:
-            if self.color_sensor.reflection() > self.THRESHOLD + 3:
+            if self.color_sensor.reflection() > self.THRESHOLD + 5:
                 self.r_motor.stop()
                 self.l_motor.stop()
                 return True
@@ -111,30 +105,30 @@ class LineFollower(Mode):
     def find_line_direct(self):
         
         if self.LAST_FOUND_RIGHT:
-            if self.turn_and_find_line(300,self.RIGHT_ANGLE_TURN_TIME , True):
+            if self.turn_and_find_line(500, (3/5) * self.RIGHT_ANGLE_TURN_TIME , True):
                 self.LAST_FOUND_RIGHT = True
                 return True
-            elif self.turn_and_find_line(300, 2 * self.RIGHT_ANGLE_TURN_TIME, False):
+            elif self.turn_and_find_line(500, (3/5) * 2 * self.RIGHT_ANGLE_TURN_TIME, False):
                 self.LAST_FOUND_RIGHT = False
                 return True
-            self.r_motor.run_time(-300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=False)
-            self.l_motor.run_time(300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=True)
+            self.r_motor.run_time(-500, (3/5) * self.RIGHT_ANGLE_TURN_TIME, then=Stop.BRAKE, wait=False)
+            self.l_motor.run_time(500, (3/5) * self.RIGHT_ANGLE_TURN_TIME, then=Stop.BRAKE, wait=True)
         else:
-            if self.turn_and_find_line(300, self.RIGHT_ANGLE_TURN_TIME, False):
+            if self.turn_and_find_line(500, (3/5) * self.RIGHT_ANGLE_TURN_TIME, False):
                 self.LAST_FOUND_RIGHT = False
                 return True
-            elif self.turn_and_find_line(300, 2 * self.RIGHT_ANGLE_TURN_TIME, True):
+            elif self.turn_and_find_line(500, (3/5) * 2 * self.RIGHT_ANGLE_TURN_TIME, True):
                 self.LAST_FOUND_RIGHT = True
                 return True
-            self.r_motor.run_time(300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=False)
-            self.l_motor.run_time(-300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=True)
+            self.r_motor.run_time(500, (3/5) * self.RIGHT_ANGLE_TURN_TIME, then=Stop.BRAKE, wait=False)
+            self.l_motor.run_time(-500, (3/5) * self.RIGHT_ANGLE_TURN_TIME, then=Stop.BRAKE, wait=True)
 
         return False
 
     def bridge_gap(self):
         self.drivebase.reset()
         self.drivebase.drive(self.TOP_SPEED, 0)
-        while self.drivebase.distance() < 120:
+        while self.drivebase.distance() < 140:
             if self.color_sensor.reflection() > self.THRESHOLD + 3:
                 break
         self.drivebase.stop()
