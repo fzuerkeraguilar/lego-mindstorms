@@ -10,12 +10,12 @@ class LineFollower(Mode):
     BLACK = 6
     WHITE = 35
     THRESHOLD = (0.8* BLACK + 1.2 * WHITE) // 2
-    GAIN = 3
+    GAIN = 4
 
     LAST_FOUND_RIGHT = True
 
-    INITIAL_SPEED = 40
-    TOP_SPEED = 130
+    INITIAL_SPEED = 60
+    TOP_SPEED = 150
     STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
@@ -47,10 +47,14 @@ class LineFollower(Mode):
 
         if reflection <= self.BLACK:
             self.speed = self.INITIAL_SPEED
+
             # blue line is "Black" for reflection. Check here whether we lost line or found blue line
             if self.color_sensor.color() == Color.BLUE:
                 self.drivebase.stop()
                 return False
+
+            if self.recover_line():
+                return True # go back into follow line
 
             if not self.find_line_direct():
                 self.bridge_gap()
@@ -77,7 +81,23 @@ class LineFollower(Mode):
         self.drivebase.straight(-50)
         self.find_line_direct()
 
+    def recover_line(self):
+        self.drivebase.drive(-self.INITIAL_SPEED, 0)
+        wait(300)
+        reflection = self.color_sensor.reflection()
+        return reflection >= self.THRESHOLD
+
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):
+        watch = StopWatch()
+
+        if turn_right:
+            speed_right = -speed
+            speed_left = speed
+
+        else:
+            speed_right = speed
+            speed_left = -speed
+
         self.hub.speaker.beep()
         self.drivebase.stop()
         if turn_right:
