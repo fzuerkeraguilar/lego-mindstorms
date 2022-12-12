@@ -53,7 +53,7 @@ class LineFollower(Mode):
                 return False
 
             if not self.find_line_direct():
-                self.drivebase.straight(120)
+                self.bridge_gap()
 
         self.speed = min(self.TOP_SPEED, self.speed + 1)
         if abs(deviation) > 15:
@@ -130,6 +130,15 @@ class LineFollower(Mode):
             self.l_motor.run_time(-300, self.RIGHT_ANGLE_TURN_TIME, then=Stop.HOLD, wait=True)
 
         return False
+
+    def bridge_gap(self):
+        self.drivebase.reset()
+        self.drivebase.drive(self.TOP_SPEED, 0)
+        while self.drivebase.distance() < 120:
+            if self.color_sensor.reflection() > self.THRESHOLD + 3:
+                break
+        self.drivebase.stop()
+
 
     def run(self):
         self.distance_sensor.set_angle(75)
