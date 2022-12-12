@@ -1,7 +1,7 @@
 {
     "dusty_drivebase": {    
         "wheel_diameter": 33,
-        "wheel_base": 192
+        "wheel_base": 182
     },
     "clean_drivebase": {
         "wheel_diameter": 33,
