@@ -37,16 +37,15 @@ class BoxPusher(Mode):
     def find_start_pos(self):
         self.hub.screen.print("find start pos")
         self.hub.speaker.beep()
-        self.drivebase.straight(150)
+
+        # drive forward until in reach of box
+        self.drivebase.straight(1150)
 
         # align at left wall
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.straight(-50)
         self.drivebase.turn(90)
-
-        # drive forward until in reach of box
-        self.drivebase.straight(1150)
 
     def push_box(self):
         self.hub.speaker.beep()
@@ -71,7 +70,7 @@ class BoxPusher(Mode):
         self.drivebase.turn(-90)
 
         # push box to the wall
-        self.drivebase.straight(300)
+        self.drivebase.straight(500)
     
     def find_end_pos(self):
         self.hub.screen.print("find end pos")
