@@ -42,7 +42,7 @@ class BoxPusher(Mode):
         # align at left wall
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
-        self.drivebase.straight(-50)
+        self.drivebase.straight(-100)
         self.drivebase.turn(90)
 
         # drive forward until in reach of box
@@ -52,7 +52,7 @@ class BoxPusher(Mode):
         self.hub.speaker.beep()
         # find the box
         self.hub.screen.print("find box")
-        self.distance_sensor.set_angle(self.UP)
+        self.distance_sensor.set_up()
         self.drive_until_box_found(self.THRESHOLD_DISTANCE)
         self.drivebase.turn(90)
 

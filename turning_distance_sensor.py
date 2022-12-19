@@ -16,6 +16,10 @@ class TurningDistanceSensor:
             raise ValueError("Angle must be between -90 and 90 degrees")
         self.turn_motor.run_target(self.speed, angle, then=Stop.HOLD, wait=wait)
 
+    def set_up(self):
+        self.turn_motor.run_until_stalled(100, then=Stop.HOLD)
+        self.turn_motor.reset_angle(0)
+
     def measure_angle(self, angle):
         if angle > 90 or angle < -90:
             raise ValueError("Angle must be between -90 and 90 degrees")
