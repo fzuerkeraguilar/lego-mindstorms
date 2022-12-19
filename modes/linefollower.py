@@ -12,9 +12,9 @@ class LineFollower(Mode):
     THRESHOLD = (BLACK + WHITE) / 2
     GAIN = 3
 
-    LAST_FOUND_RIGHT = False
+    LAST_FOUND_RIGHT = True
 
-    INITIAL_SPEED = 40
+    INITIAL_SPEED = 70
     TOP_SPEED = 130
     STEP_SIZE = 10
     WAIT_TIME = 5
@@ -54,10 +54,10 @@ class LineFollower(Mode):
 
             if not self.find_line_direct():
                 self.bridge_gap()
-        if abs(deviation) < 5:
-            self.speed = min(self.TOP_SPEED, self.speed + 1)
-        if abs(deviation) > 10:
-            self.speed = max(self.INITIAL_SPEED, self.speed - 5)
+        # if abs(deviation) < 5:
+        #     self.speed = min(self.TOP_SPEED, self.speed + 1)
+        # if abs(deviation) > 10:
+        #     self.speed = max(self.INITIAL_SPEED, self.speed - 5)
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
@@ -69,7 +69,7 @@ class LineFollower(Mode):
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(370)
+        self.drivebase.straight(350)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
@@ -79,25 +79,27 @@ class LineFollower(Mode):
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):
         self.hub.speaker.beep()
         self.drivebase.stop()
+        self.r_motor.reset_angle(0)
+        self.l_motor.reset_angle(0)
         if turn_right:
-            self.r_motor.reset_angle(0)
-            self.r_motor.run_angle(speed, -500 * ninety_degrees, wait=False)
-            self.l_motor.run_angle(speed, 500 * ninety_degrees, wait=False)
-            while self.r_motor.angle() > -500 * ninety_degrees:
+            self.r_motor.run_angle(speed, -570 * ninety_degrees, wait=False)
+            self.l_motor.run_angle(speed, 570 * ninety_degrees, wait=False)
+            while self.r_motor.angle() > -570 * ninety_degrees and self.l_motor.angle() < 570 * ninety_degrees:
                 if self.color_sensor.reflection() > self.THRESHOLD + 5:
                     self.r_motor.stop()
                     self.l_motor.stop()
                     return True
         else:
-            self.r_motor.reset_angle(0)
             self.r_motor.run_angle(speed, 500 * ninety_degrees, wait=False)
             self.l_motor.run_angle(speed, -500 * ninety_degrees, wait=False)
-            while self.r_motor.angle() < 500 * ninety_degrees:
+            while self.r_motor.angle() < 500 * ninety_degrees and self.l_motor.angle() > -500 * ninety_degrees:
                 if self.color_sensor.reflection() > self.THRESHOLD + 5:
                     self.r_motor.stop()
                     self.l_motor.stop()
                     return True
-        
+        self.r_motor.hold()
+        self.l_motor.hold()
+        wait(100)
         return False
 
     def find_line_direct(self):
@@ -108,8 +110,8 @@ class LineFollower(Mode):
             elif self.turn_and_find_line(400, False, ninety_degrees=2):
                 self.LAST_FOUND_RIGHT = False
                 return True
-            self.r_motor.run_angle(400, -500, wait=False)
-            self.l_motor.run_angle(400, 500, wait=True)
+            self.r_motor.run_angle(400, -530, wait=False)
+            self.l_motor.run_angle(400, 530, wait=True)
         else:
             if self.turn_and_find_line(400, False):
                 self.LAST_FOUND_RIGHT = False
@@ -124,7 +126,7 @@ class LineFollower(Mode):
     def bridge_gap(self):
         self.drivebase.reset()
         self.drivebase.drive(self.TOP_SPEED, 0)
-        while self.drivebase.distance() < 140:
+        while self.drivebase.distance() < 160:
             if self.color_sensor.reflection() > self.THRESHOLD + 3:
                 break
         self.drivebase.stop()
