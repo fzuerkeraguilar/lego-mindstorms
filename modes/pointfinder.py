@@ -15,10 +15,10 @@ class PointFinder(Mode):
     def circle_search(self):
         red_found = False
         white_found = False
-        stop_distance = 40
+        distance = 960
 
         for i in range(0, 3):
-            while self.distance_sensor.distance() > stop_distance:
+            while self.drivebase.distance() > distance:
                 self.drivebase.drive(self.INITIAL_SPEED, 0)
                 color = self.color_sensor.color()
                 if not red_found and color == Color.RED:
@@ -30,12 +30,14 @@ class PointFinder(Mode):
                 if red_found and white_found:
                     self.drivebase.stop()
                     return
+            self.drivebase.stop()
             self.drivebase.turn(-90)
+            self.drivebase.reset()
 
-        while stop_distance < 500:
-            stop_distance += 70
+        while stop_distance > 500:
+            stop_distance -= 70
             for i in range(0, 4):
-                while self.distance_sensor.distance() > stop_distance:
+                while self.drivebase.distance() < distance:
                     self.drivebase.drive(self.INITIAL_SPEED, 0)
                     rgb = self.color_sensor.rgb()
                     if rgb[0] > 50 and not red_found:
@@ -50,7 +52,9 @@ class PointFinder(Mode):
                         if red_found and white_found:
                             self.drivebase.stop()
                             return
+                self.drivebase.stop()
                 self.drivebase.turn(-90)
+                self.drivebase.reset()
 
     def run(self):
         self.circle_search()
