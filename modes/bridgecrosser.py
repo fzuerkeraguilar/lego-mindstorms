@@ -17,6 +17,7 @@ class BridgeCrosser(Mode):
     def __init__(self, color_sensor, distance_sensor, config, speed=INITIAL_SPEED):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.drivebase = config.get_drivebase(clean=True)
+        self.distance_sensor.set_down()
 
     def run(self):
         self.drive_up_ramp()
@@ -38,21 +39,25 @@ class BridgeCrosser(Mode):
             if distance > 150:
                 self.drivebase.drive(self.INITIAL_SPEED, -15)    
             else :
-                self.drivebase.drive(self.INITIAL_SPEED, 1)
+                self.drivebase.drive(self.INITIAL_SPEED, 3)
         self.drivebase.stop()
 
     def drive_straight(self, drive_distance, speed=100):
         self.distance_sensor.set_angle(0)
         self.drivebase.reset()
-        self.drivebase.drive(speed, 0)
+        self.drivebase.drive(speed, 1)
         
         while self.drivebase.distance() < drive_distance:
+            if self.color_sensor.reflection() == 0:
+                self.drivebase.stop()
+                self.drivebase.straight(-40)
+                return
             distance = self.distance_sensor.distance()
             self.hub.screen.print("Distance: ", distance)
             if distance > 150:
-                self.drivebase.drive(speed, -15)    
+                self.drivebase.drive(speed, -10)    
             else :
-                self.drivebase.drive(speed, 1)
+                self.drivebase.drive(speed, 3)
         self.drivebase.stop()
 
     def drive_down_ramp(self):
@@ -62,12 +67,16 @@ class BridgeCrosser(Mode):
             if self.color_sensor.color() == Color.BLUE:
                 self.drivebase.stop()
                 return
-            distance = self.distance_sensor.distance()
-            self.hub.screen.print("Distance: ", distance)
-            if distance > 1500:
-                self.drivebase.drive(self.INITIAL_SPEED, -10)    
-            else :
-                self.drivebase.drive(self.INITIAL_SPEED, 1)
+            if self.drivebase.distance() > 650:
+                self.distance_sensor.set_up()
+                self.drivebase.drive(self.INITIAL_SPEED, 0)
+            else:
+                distance = self.distance_sensor.distance()
+                self.hub.screen.print("Distance: ", distance)
+                if distance > 150:
+                    self.drivebase.drive(self.INITIAL_SPEED, -10)    
+                else:
+                    self.drivebase.drive(self.INITIAL_SPEED, 0)
         self.drivebase.stop()
 
     def play_music(self):

@@ -18,6 +18,9 @@ class TurningDistanceSensor:
 
     def set_up(self):
         self.turn_motor.run_until_stalled(100, then=Stop.HOLD)
+
+    def set_down(self):
+        self.turn_motor.run_until_stalled(-100, then=Stop.HOLD)
         self.turn_motor.reset_angle(0)
 
     def measure_angle(self, angle):
