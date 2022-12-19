@@ -9,7 +9,7 @@ from controller.pcontroller import PController
 
 class BoxPusher(Mode):
     WHITE = 30
-    INITIAL_SPEED = 200
+    INITIAL_SPEED = 300
     CORRECTION_SPEED = 2
     DISTANCE_BIAS = 5
     THRESHOLD_DISTANCE = 350
