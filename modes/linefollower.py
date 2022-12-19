@@ -4,6 +4,7 @@ from pybricks.robotics import DriveBase
 from pybricks.ev3devices import Motor, TouchSensor, ColorSensor, UltrasonicSensor
 from pybricks.tools import wait, StopWatch
 from modes.mode import Mode
+from math import floor
 
 
 class LineFollower(Mode):
@@ -54,10 +55,12 @@ class LineFollower(Mode):
 
             if not self.find_line_direct():
                 self.bridge_gap()
+
+        speed_gain = self.speed / 40
         if abs(deviation) < 5:
             self.speed = min(self.TOP_SPEED, self.speed + 1)
         if abs(deviation) > 10:
-            self.speed = max(self.INITIAL_SPEED, self.speed - 5)
+            self.speed = max(self.INITIAL_SPEED, floor(self.speed * 0.8))
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
