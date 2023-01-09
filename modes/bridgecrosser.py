@@ -9,7 +9,7 @@ from controller.pcontroller import PController
 class BridgeCrosser(Mode):
 
     RAMP_ANGLE = 15
-    INITIAL_SPEED = 50
+    INITIAL_SPEED = 70
     WALL_DISTANCE = 572
     RAMP_LENGTH = 1050
     BRIDGE_LENGTH = 1050
@@ -76,7 +76,7 @@ class BridgeCrosser(Mode):
                 if distance > 150:
                     self.drivebase.drive(self.INITIAL_SPEED, -10)    
                 else:
-                    self.drivebase.drive(self.INITIAL_SPEED, 1)
+                    self.drivebase.drive(self.INITIAL_SPEED, 0)
         self.drivebase.stop()
 
     def play_music(self):
