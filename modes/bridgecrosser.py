@@ -17,9 +17,9 @@ class BridgeCrosser(Mode):
     def __init__(self, color_sensor, distance_sensor, config, speed=INITIAL_SPEED):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.drivebase = config.get_drivebase(clean=True)
-        self.distance_sensor.set_down()
 
     def run(self):
+        self.distance_sensor.set_down()
         self.drive_up_ramp()
         self.drivebase.turn(-90)
         self.drive_straight(1260)

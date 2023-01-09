@@ -9,7 +9,7 @@ from controller.pcontroller import PController
 
 class BoxPusher(Mode):
     WHITE = 30
-    INITIAL_SPEED = 200
+    INITIAL_SPEED = 300
     CORRECTION_SPEED = 2
     DISTANCE_BIAS = 5
     THRESHOLD_DISTANCE = 350
@@ -37,16 +37,15 @@ class BoxPusher(Mode):
     def find_start_pos(self):
         self.hub.screen.print("find start pos")
         self.hub.speaker.beep()
-        self.drivebase.straight(150)
+
+        # drive forward until in reach of box
+        self.drivebase.straight(1150)
 
         # align at left wall
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.straight(-100)
         self.drivebase.turn(90)
-
-        # drive forward until in reach of box
-        self.drivebase.straight(1150)
 
     def push_box(self):
         self.hub.speaker.beep()
@@ -66,12 +65,12 @@ class BoxPusher(Mode):
 
         self.drivebase.straight(230)
         self.drivebase.turn(-90)
-        self.drivebase.straight(200)
+        self.drivebase.straight(180)
         self.drivebase.straight(-50)
         self.drivebase.turn(-90)
 
         # push box to the wall
-        self.drivebase.straight(300)
+        self.drivebase.straight(550)
     
     def find_end_pos(self):
         self.hub.screen.print("find end pos")
@@ -80,20 +79,21 @@ class BoxPusher(Mode):
         self.drivebase.straight(-50)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
-        self.drivebase.straight(-50)
+        self.drivebase.straight(-350)
         self.drivebase.turn(90)
-        self.drivebase.straight(1000)
-        while self.touch_sensor.pressed() == False:
-            self.drivebase.drive(100, 0)
-        self.drivebase.straight(100)
-        # set back
-        self.drivebase.straight(-50)
-        self.drivebase.turn(90)
-        
-        self.drivebase.straight(300)
-        self.drivebase.stop()
-        self.drivebase.turn(-90)
+        # align at back wall
+        self.drivebase.straight(-200)
 
+        # # set back
+        # self.drivebase.straight(-50)
+        # self.drivebase.turn(90)
+        
+        # self.drivebase.straight(300)
+        # self.drivebase.stop()
+        # self.drivebase.turn(-90)
+
+        # find blue line
+        self.drivebase.straight(800)
         while self.color_sensor.color() != Color.BLUE:
             self.drivebase.drive(50, 0)
         self.drivebase.stop()   
@@ -152,7 +152,7 @@ class BoxPusher(Mode):
             pass
 
         # wait(overshoot_time) # keep driving for overshoot_time.
-        self.drivebase.straight(180)
+        self.drivebase.straight(140)
         self.drivebase.stop()
 
     def drive_until_box_lost(
