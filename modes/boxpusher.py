@@ -10,9 +10,10 @@ from controller.pcontroller import PController
 class BoxPusher(Mode):
     WHITE = 30
     INITIAL_SPEED = 300
+    SLOW_SPEED = 50
     CORRECTION_SPEED = 2
     DISTANCE_BIAS = 5
-    THRESHOLD_DISTANCE = 350
+    THRESHOLD_DISTANCE = 300
 
     UP = 65
     DOWN = 0
@@ -39,20 +40,30 @@ class BoxPusher(Mode):
         self.hub.speaker.beep()
 
         # drive forward until in reach of box
-        self.drivebase.straight(1150)
+        self.drivebase.straight(1200)
 
         # align at left wall
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
-        self.drivebase.straight(-100)
+        self.drivebase.straight(-70)
         self.drivebase.turn(90)
+
+    def align_sensor(self):
+        while self.distance_sensor.turn_motor.angle < 80:
+            self.distance_sensor.turn_motor.run(200)
 
     def push_box(self):
         self.hub.speaker.beep()
         # find the box
         self.hub.screen.print("find box")
         self.distance_sensor.set_up()
+        self.distance_sensor.set_angle(80)
+        # self.distance_sensor.set_up()
+        # self.distance_sensor.set_angle(80)
+        # self.align_sensor()
         self.drive_until_box_found(self.THRESHOLD_DISTANCE)
+        self.drive_until_box_lost(self.THRESHOLD_DISTANCE)
+        self.drivebase.straight(-100)
         self.drivebase.turn(90)
 
         # push box to the wall
@@ -60,13 +71,13 @@ class BoxPusher(Mode):
         self.drivebase.straight(700)
 
         # set back and turn
-        self.drivebase.straight(-50)
+        self.drivebase.straight(-70)
         self.drivebase.turn(90)
 
         self.drivebase.straight(230)
         self.drivebase.turn(-90)
-        self.drivebase.straight(180)
-        self.drivebase.straight(-50)
+        self.drivebase.straight(200)
+        self.drivebase.straight(-60)
         self.drivebase.turn(-90)
 
         # push box to the wall
@@ -76,13 +87,13 @@ class BoxPusher(Mode):
         self.hub.screen.print("find end pos")
         self.hub.speaker.beep()
 
-        self.drivebase.straight(-50)
+        self.drivebase.straight(-70)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
-        self.drivebase.straight(-350)
+        self.drivebase.straight(-330)
         self.drivebase.turn(90)
         # align at back wall
-        self.drivebase.straight(-200)
+        # self.drivebase.straight(-230)
 
         # # set back
         # self.drivebase.straight(-50)
@@ -93,7 +104,7 @@ class BoxPusher(Mode):
         # self.drivebase.turn(-90)
 
         # find blue line
-        self.drivebase.straight(800)
+        self.drivebase.straight(550)
         while self.color_sensor.color() != Color.BLUE:
             self.drivebase.drive(50, 0)
         self.drivebase.stop()   
@@ -152,8 +163,9 @@ class BoxPusher(Mode):
             pass
 
         # wait(overshoot_time) # keep driving for overshoot_time.
-        self.drivebase.straight(50)
+        # self.drivebase.straight(50)
         self.drivebase.stop()
+
 
     def drive_until_box_lost(
         self, threshold_distance, speed=INITIAL_SPEED, overshoot_time=0
@@ -163,7 +175,7 @@ class BoxPusher(Mode):
         self.hub.screen.print("until threshold")
         self.hub.speaker.beep()
 
-        self.drivebase.drive(speed, 0)
+        self.drivebase.drive(self.SLOW_SPEED, 0)
 
         while self.distance_sensor.distance() < threshold_distance:
             self.hub.screen.print(self.distance_sensor.distance())
@@ -171,5 +183,4 @@ class BoxPusher(Mode):
 
         # wait(overshoot_time) # keep driving for overshoot_time.
         self.hub.speaker.beep(frequency=8000)
-        self.drivebase.straight(150)
         self.drivebase.stop()
