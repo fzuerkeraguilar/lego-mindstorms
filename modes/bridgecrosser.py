@@ -74,9 +74,9 @@ class BridgeCrosser(Mode):
                 distance = self.distance_sensor.distance()
                 self.hub.screen.print("Distance: ", distance)
                 if distance > 150:
-                    self.drivebase.drive(self.INITIAL_SPEED, -15)    
+                    self.drivebase.drive(self.INITIAL_SPEED, -10)    
                 else:
-                    self.drivebase.drive(self.INITIAL_SPEED, 3)
+                    self.drivebase.drive(self.INITIAL_SPEED, 1)
         self.drivebase.stop()
 
     def play_music(self):
