@@ -74,7 +74,7 @@ class BridgeCrosser(Mode):
                 distance = self.distance_sensor.distance()
                 self.hub.screen.print("Distance: ", distance)
                 if distance > 150:
-                    self.drivebase.drive(self.INITIAL_SPEED, -10)    
+                    self.drivebase.drive(self.INITIAL_SPEED, -15)    
                 else:
                     self.drivebase.drive(self.INITIAL_SPEED, 1)
         self.drivebase.stop()
