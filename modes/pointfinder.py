@@ -17,12 +17,15 @@ class PointFinder(Mode):
     def __init__(self, color_sensor, distance_sensor, touch_sensor, config, speed=INITIAL_SPEED):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.touch_sensor = touch_sensor
+        self.red_found = False
+        self.white_found = False
 
     def circle_search(self):
-        self.drivebase.straight(30)
         distances = []
         self.distance_sensor.set_up()
 
+        self.drivebase.straight(50)
+        self.drivebase.reset()
         for i in range(0, 2):
             while not self.touch_sensor.pressed():
                 self.drive_guided_straight(35)
@@ -42,14 +45,14 @@ class PointFinder(Mode):
         while distances[0] > 0 and distances[1] > 0:
             for i in range(0, 2):
                 wall_distance = self.distance_sensor.distance()
-                while self.drivebase.distance() < distances[i] or self.touch_sensor.pressed():
+                while self.drivebase.distance() < distances[i] and not self.touch_sensor.pressed():
                     self.drive_guided_straight(wall_distance)
                     if self.check_color():
                         return
                 self.drivebase.stop()
-                if self.drivebase.pressed():
+                if self.touch_sensor.pressed():
                     distances[i] = self.drivebase.distance()
-                self.drivebase.straight(-30)
+                    self.drivebase.straight(-30)
                 distances[i] -= 50
                 self.drivebase.turn(-90)
                 self.drivebase.reset()
@@ -108,5 +111,3 @@ class PointFinder(Mode):
             self.white_color_found = True
             self.hub.speaker.beep()
         return self.red_color_found and self.white_color_found
-
-
