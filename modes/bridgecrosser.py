@@ -57,7 +57,7 @@ class BridgeCrosser(Mode):
             if distance > 150:
                 self.drivebase.drive(speed, -10)    
             else :
-                self.drivebase.drive(speed, 3)
+                self.drivebase.drive(speed, 1)
         self.drivebase.stop()
 
     def drive_down_ramp(self):
