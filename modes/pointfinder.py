@@ -81,8 +81,8 @@ class PointFinder(Mode):
                 self.drivebase.reset()
 
     def run(self):
-        # self.circle_search()
-        self.random_search()
+        self.circle_search()
+        # self.random_search()
 
     def random_search(self):
         self.drivebase.drive(self.INITIAL_SPEED, 0)

@@ -152,7 +152,7 @@ class BoxPusher(Mode):
             pass
 
         # wait(overshoot_time) # keep driving for overshoot_time.
-        self.drivebase.straight(140)
+        self.drivebase.straight(50)
         self.drivebase.stop()
 
     def drive_until_box_lost(
