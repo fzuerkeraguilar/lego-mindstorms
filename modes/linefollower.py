@@ -68,15 +68,16 @@ class LineFollower(Mode):
 
     def avoid_obstacle(self):
         self.drivebase.stop()
+        self.drivebase.settings(self.speed, None, self.speed)
         self.drivebase.straight(-50)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(350)
+        self.drivebase.straight(360)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
-        self.drivebase.straight(-50)
+        self.drivebase.straight(-70)
         self.find_line_direct()
 
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):

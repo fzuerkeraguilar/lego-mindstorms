@@ -39,8 +39,16 @@ class BoxPusher(Mode):
         self.hub.screen.print("find start pos")
         self.hub.speaker.beep()
 
+        self.drivebase.straight(100)
+
+        # align at left wall first tome to be able to drive straight
+        self.drivebase.turn(-90)
+        self.drivebase.straight(200)
+        self.drivebase.straight(-200)
+        self.drivebase.turn(90)
+
         # drive forward until in reach of box
-        self.drivebase.straight(1200)
+        self.drivebase.straight(1100)
 
         # align at left wall
         self.drivebase.turn(-90)
