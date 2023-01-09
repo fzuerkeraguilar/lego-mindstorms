@@ -20,6 +20,7 @@ class LineFollower(Mode):
     WAIT_TIME = 5
     INITIAL_TURN = 50
     RIGHT_ANGLE_TURN_TIME = 2000
+    NINETY_TURN_TIME = 570
 
     def __init__(
         self,
@@ -82,17 +83,17 @@ class LineFollower(Mode):
         self.r_motor.reset_angle(0)
         self.l_motor.reset_angle(0)
         if turn_right:
-            self.r_motor.run_angle(speed, -570 * ninety_degrees, wait=False)
-            self.l_motor.run_angle(speed, 570 * ninety_degrees, wait=False)
-            while self.r_motor.angle() > -570 * ninety_degrees and self.l_motor.angle() < 570 * ninety_degrees:
+            self.r_motor.run_angle(speed, - self.NINETY_TURN_TIME * ninety_degrees, wait=False)
+            self.l_motor.run_angle(speed, self.NINETY_TURN_TIME * ninety_degrees, wait=False)
+            while self.r_motor.angle() > - self.NINETY_TURN_TIME * ninety_degrees and self.l_motor.angle() < self.NINETY_TURN_TIME * ninety_degrees:
                 if self.color_sensor.reflection() > self.THRESHOLD + 5:
                     self.r_motor.stop()
                     self.l_motor.stop()
                     return True
         else:
-            self.r_motor.run_angle(speed, 500 * ninety_degrees, wait=False)
-            self.l_motor.run_angle(speed, -500 * ninety_degrees, wait=False)
-            while self.r_motor.angle() < 500 * ninety_degrees and self.l_motor.angle() > -500 * ninety_degrees:
+            self.r_motor.run_angle(speed, self.NINETY_TURN_TIME * ninety_degrees, wait=False)
+            self.l_motor.run_angle(speed, - self.NINETY_TURN_TIME * ninety_degrees, wait=False)
+            while self.r_motor.angle() < self.NINETY_TURN_TIME * ninety_degrees and self.l_motor.angle() > - self.NINETY_TURN_TIME * ninety_degrees:
                 if self.color_sensor.reflection() > self.THRESHOLD + 5:
                     self.r_motor.stop()
                     self.l_motor.stop()

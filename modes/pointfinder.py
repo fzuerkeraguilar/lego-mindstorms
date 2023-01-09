@@ -4,14 +4,18 @@ from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor
 from modes.mode import Mode
 
+import random
+
 
 class PointFinder(Mode):
-    INITIAL_SPEED = 150
+    INITIAL_SPEED = 500
     INITIAL_SIDE_LENGTH = 1000
+    red_color_found = False
+    white_color_found = False
 
-    def __init__(self, color_sensor, distance_sensor, touch_sonsor, config, speed=INITIAL_SPEED):
+    def __init__(self, color_sensor, distance_sensor, touch_sensor, config, speed=INITIAL_SPEED):
         super().__init__(color_sensor, distance_sensor, config, speed)
-        self.touch_sensor = touch_sonsor
+        self.touch_sensor = touch_sensor
 
     def circle_search(self):
         distances = []
@@ -69,4 +73,35 @@ class PointFinder(Mode):
                 self.drivebase.reset()
 
     def run(self):
-        self.circle_search()
+        # self.circle_search()
+        self.random_search()
+
+    def random_search(self):
+        self.drivebase.drive(self.INITIAL_SPEED, 0)
+
+        while True:
+            color_found = self.color_sensor.color()
+            self.hub.screen.print("Color: ", color_found)
+            self.check_collision_or_blue_line_and_turn(color_found)
+            if self.check_colors(color_found):
+                self.drivebase.stop()
+                return
+
+    def check_collision_or_blue_line_and_turn(self, color_found):
+        if self.touch_sensor.pressed() or color_found == Color.BLUE:
+            self.drivebase.stop()
+            random_turn = random.randint(-80, 80)
+            self.drivebase.straight(-50)
+            self.drivebase.turn(random_turn + 180)
+            self.drivebase.drive(self.INITIAL_SPEED, 0)
+
+    def check_colors(self, color_found):
+        if color_found == Color.RED and not self.red_color_found:
+            self.red_color_found = True
+            self.hub.speaker.beep()
+        elif color_found == Color.WHITE and not self.white_color_found:
+            self.white_color_found = True
+            self.hub.speaker.beep()
+        return self.red_color_found and self.white_color_found
+
+
