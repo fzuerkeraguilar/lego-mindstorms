@@ -11,12 +11,7 @@ class BoxPusher(Mode):
     WHITE = 30
     INITIAL_SPEED = 400
     SLOW_SPEED = 50
-    CORRECTION_SPEED = 2
-    DISTANCE_BIAS = 5
     THRESHOLD_DISTANCE = 320
-
-    UP = 65
-    DOWN = 0
 
     def __init__(
         self,
@@ -102,32 +97,6 @@ class BoxPusher(Mode):
         while self.color_sensor.color() != Color.BLUE:
             self.drivebase.drive(50, 0)
         self.drivebase.stop()   
-
-    def drive_guided_straight(
-        self, distance, wall_distance, speed=INITIAL_SPEED, bias=DISTANCE_BIAS
-    ):
-        "Drive straight for motor_cycles with guidance from the distance sensor"
-        self.hub.screen.print("guided straight")
-        self.hub.speaker.beep()
-
-        wall_distance = wall_distance
-        controller = PController(wall_distance, 0.1)
-
-        # use drivebase to detect driven length
-
-        self.drivebase.reset()
-        while self.drivebase.distance() < distance:
-            # correct angle to drive straight
-            current_distance = self.distance_sensor.distance()
-            turn_rate = min(controller.correction(current_distance), 3)
-            self.drivebase.drive(speed, turn_rate)
-            self.hub.screen.print(turn_rate)
-            
-            if self.color_sensor.color() == Color.BLUE:
-                self.hub.speaker.beep()
-                break
-
-        self.drivebase.stop()
 
     def drive_until_box_found(
         self, threshold_distance
