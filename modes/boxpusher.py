@@ -11,12 +11,7 @@ class BoxPusher(Mode):
     WHITE = 30
     INITIAL_SPEED = 400
     SLOW_SPEED = 50
-    CORRECTION_SPEED = 2
-    DISTANCE_BIAS = 5
     THRESHOLD_DISTANCE = 320
-
-    UP = 65
-    DOWN = 0
 
     def __init__(
         self,
@@ -39,7 +34,7 @@ class BoxPusher(Mode):
         self.hub.screen.print("find start pos")
         self.hub.speaker.beep()
 
-        self.drivebase.straight(100)
+        self.drivebase.straight(200)
 
         # align at left wall first tome to be able to drive straight
         self.drivebase.turn(-90)
@@ -48,7 +43,7 @@ class BoxPusher(Mode):
         self.drivebase.turn(90)
 
         # drive forward until in reach of box
-        self.drivebase.straight(1100)
+        self.drivebase.straight(1000)
 
         # align at left wall
         self.drivebase.turn(-90)
@@ -80,7 +75,7 @@ class BoxPusher(Mode):
 
         self.drivebase.straight(230)
         self.drivebase.turn(-90)
-        self.drivebase.straight(200)
+        self.drivebase.straight(230)
         self.drivebase.straight(-60)
         self.drivebase.turn(-90)
 
@@ -103,32 +98,6 @@ class BoxPusher(Mode):
             self.drivebase.drive(50, 0)
         self.drivebase.stop()   
 
-    def drive_guided_straight(
-        self, distance, wall_distance, speed=INITIAL_SPEED, bias=DISTANCE_BIAS
-    ):
-        "Drive straight for motor_cycles with guidance from the distance sensor"
-        self.hub.screen.print("guided straight")
-        self.hub.speaker.beep()
-
-        wall_distance = wall_distance
-        controller = PController(wall_distance, 0.1)
-
-        # use drivebase to detect driven length
-
-        self.drivebase.reset()
-        while self.drivebase.distance() < distance:
-            # correct angle to drive straight
-            current_distance = self.distance_sensor.distance()
-            turn_rate = min(controller.correction(current_distance), 3)
-            self.drivebase.drive(speed, turn_rate)
-            self.hub.screen.print(turn_rate)
-            
-            if self.color_sensor.color() == Color.BLUE:
-                self.hub.speaker.beep()
-                break
-
-        self.drivebase.stop()
-
     def drive_until_box_found(
         self, threshold_distance
     ):
@@ -138,6 +107,8 @@ class BoxPusher(Mode):
         while times_found < 5:
             if self.distance_sensor.distance() < threshold_distance:
                 times_found = times_found + 1
+            else:
+                times_found = 0
 
         self.drivebase.stop()
 
@@ -151,5 +122,7 @@ class BoxPusher(Mode):
         while times_lost < 5:
             if self.distance_sensor.distance() > threshold_distance:
                 times_lost = times_lost + 1
+            else:
+                times_lost = 0
 
         self.drivebase.stop()
