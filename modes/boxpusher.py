@@ -34,7 +34,7 @@ class BoxPusher(Mode):
         self.hub.screen.print("find start pos")
         self.hub.speaker.beep()
 
-        self.drivebase.straight(100)
+        self.drivebase.straight(200)
 
         # align at left wall first tome to be able to drive straight
         self.drivebase.turn(-90)
@@ -43,7 +43,7 @@ class BoxPusher(Mode):
         self.drivebase.turn(90)
 
         # drive forward until in reach of box
-        self.drivebase.straight(1100)
+        self.drivebase.straight(1000)
 
         # align at left wall
         self.drivebase.turn(-90)
@@ -75,7 +75,7 @@ class BoxPusher(Mode):
 
         self.drivebase.straight(230)
         self.drivebase.turn(-90)
-        self.drivebase.straight(200)
+        self.drivebase.straight(230)
         self.drivebase.straight(-60)
         self.drivebase.turn(-90)
 
@@ -107,6 +107,8 @@ class BoxPusher(Mode):
         while times_found < 5:
             if self.distance_sensor.distance() < threshold_distance:
                 times_found = times_found + 1
+            else:
+                times_found = 0
 
         self.drivebase.stop()
 
@@ -120,5 +122,7 @@ class BoxPusher(Mode):
         while times_lost < 5:
             if self.distance_sensor.distance() > threshold_distance:
                 times_lost = times_lost + 1
+            else:
+                times_lost = 0
 
         self.drivebase.stop()
