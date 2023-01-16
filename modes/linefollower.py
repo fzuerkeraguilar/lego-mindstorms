@@ -16,12 +16,12 @@ class LineFollower(Mode):
     LAST_FOUND_RIGHT = True
 
     INITIAL_SPEED = 70
-    TOP_SPEED = 130
+    TOP_SPEED = 200
     STEP_SIZE = 10
     WAIT_TIME = 5
     INITIAL_TURN = 50
     RIGHT_ANGLE_TURN_TIME = 2000
-    NINETY_TURN_TIME = 570
+    NINETY_TURN_TIME = 575
 
     def __init__(
         self,
@@ -37,7 +37,7 @@ class LineFollower(Mode):
         self.touch_sensor = touch_sensor
         self.config = config
         self.WHITE, self.BLACK = self.config.get_wb()
-        self.THRESHOLD = (self.BLACK + self.WHITE) // 2
+        self.THRESHOLD = (self.BLACK + self.WHITE) / 2
 
     def follow_line(self):
         if self.touch_sensor.pressed():
@@ -58,9 +58,9 @@ class LineFollower(Mode):
                 self.bridge_gap()
 
         if abs(deviation) < 5:
-            self.speed = min(self.TOP_SPEED, self.speed + 1)
+            self.speed = min(self.TOP_SPEED, self.speed + 2)
         if abs(deviation) > 10:
-            self.speed = max(self.INITIAL_SPEED, floor(self.speed * 0.8))
+            self.speed = max(self.INITIAL_SPEED, self.speed * 0.8)
 
         turn_rate = self.GAIN * deviation
         self.drivebase.drive(self.speed, turn_rate)
@@ -68,7 +68,7 @@ class LineFollower(Mode):
 
     def avoid_obstacle(self):
         self.drivebase.stop()
-        self.drivebase.settings(self.speed, None, self.speed)
+        self.drivebase.settings(self.speed, None, self.speed, None)
         self.drivebase.straight(-50)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
@@ -77,7 +77,7 @@ class LineFollower(Mode):
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
-        self.drivebase.straight(-70)
+        self.drivebase.straight(-80)
         self.find_line_direct()
 
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):
@@ -107,25 +107,13 @@ class LineFollower(Mode):
         return False
 
     def find_line_direct(self):
-        if self.LAST_FOUND_RIGHT:
-            if self.turn_and_find_line(400, True):
-                self.LAST_FOUND_RIGHT = True
-                return True
-            elif self.turn_and_find_line(400, False, ninety_degrees=2):
-                self.LAST_FOUND_RIGHT = False
-                return True
-            self.r_motor.run_angle(400, -530, wait=False)
-            self.l_motor.run_angle(400, 530, wait=True)
-        else:
-            if self.turn_and_find_line(400, False):
-                self.LAST_FOUND_RIGHT = False
-                return True
-            elif self.turn_and_find_line(400, True, ninety_degrees=2):
-                self.LAST_FOUND_RIGHT = True
-                return True
-            self.r_motor.run_angle(400, 500, wait=False)
-            self.l_motor.run_angle(400, -500, wait=True)
-        return False
+        if self.turn_and_find_line(800, self.LAST_FOUND_RIGHT):
+            self.LAST_FOUND_RIGHT = self.LAST_FOUND_RIGHT
+            return True
+        elif self.turn_and_find_line(800, not self.LAST_FOUND_RIGHT, ninety_degrees=2):
+            self.LAST_FOUND_RIGHT = not self.LAST_FOUND_RIGHT
+            return True
+        return self.turn_and_find_line(800, self.LAST_FOUND_RIGHT)
 
     def bridge_gap(self):
         self.drivebase.reset()

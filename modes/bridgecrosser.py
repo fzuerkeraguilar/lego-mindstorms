@@ -31,31 +31,27 @@ class BridgeCrosser(Mode):
 
     def drive_up_ramp(self):
         self.drivebase.reset()
-        self.drivebase.drive(self.UP_SPEED, 0)
         while self.drivebase.distance() < self.RAMP_LENGTH:
             if self.color_sensor.reflection() == 0:
                 self.drivebase.stop()
                 self.drivebase.straight(-40)
                 return
             distance = self.distance_sensor.distance()
-            self.hub.screen.print("Distance: ", distance)
             if distance > 150:
                 self.drivebase.drive(self.UP_SPEED, -15)    
             else :
-                self.drivebase.drive(self.UP_SPEED, 3)
+                self.drivebase.drive(self.UP_SPEED, 2)
         self.drivebase.stop()
 
     def drive_straight(self, drive_distance):
         self.distance_sensor.set_angle(0)
         self.drivebase.reset()
-        self.drivebase.drive(self.STRAIGHT_SPEED, 1)
         while self.drivebase.distance() < drive_distance:
             if self.color_sensor.reflection() == 0:
                 self.drivebase.stop()
                 self.drivebase.straight(-40)
                 return
             distance = self.distance_sensor.distance()
-            self.hub.screen.print("Distance: ", distance)
             if distance > 150:
                 self.drivebase.drive(self.STRAIGHT_SPEED, -10)    
             else :
@@ -64,7 +60,6 @@ class BridgeCrosser(Mode):
 
     def drive_down_ramp(self):
         self.drivebase.reset()
-        self.drivebase.drive(self.DOWN_SPEED, 0)
         while self.drivebase.distance() < self.RAMP_LENGTH - 200:
             if self.color_sensor.color() == Color.BLUE:
                 self.drivebase.stop()
@@ -74,7 +69,6 @@ class BridgeCrosser(Mode):
                 self.drivebase.drive(self.DOWN_SPEED, 0)
             else:
                 distance = self.distance_sensor.distance()
-                self.hub.screen.print("Distance: ", distance)
                 if distance > 150:
                     self.drivebase.drive(self.DOWN_SPEED, -10)    
                 else:

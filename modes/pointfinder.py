@@ -9,7 +9,7 @@ import random
 
 
 class PointFinder(Mode):
-    INITIAL_SPEED = 500
+    INITIAL_SPEED = 300
     INITIAL_SIDE_LENGTH = 1000
     red_found = False
     white_found = False
@@ -17,6 +17,8 @@ class PointFinder(Mode):
     def __init__(self, color_sensor, distance_sensor, touch_sensor, config, speed=INITIAL_SPEED):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.touch_sensor = touch_sensor
+        self.drivebase.reset()
+        self.drivebase.settings(speed)
         self.red_found = False
         self.white_found = False
 
