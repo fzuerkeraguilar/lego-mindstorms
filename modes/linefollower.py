@@ -83,6 +83,8 @@ class LineFollower(Mode):
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):
         self.hub.speaker.beep()
         self.drivebase.stop()
+        self.r_motor.hold()
+        self.l_motor.hold()
         self.r_motor.reset_angle(0)
         self.l_motor.reset_angle(0)
         if turn_right:
@@ -90,16 +92,16 @@ class LineFollower(Mode):
             self.l_motor.run_angle(speed, self.NINETY_TURN_TIME * ninety_degrees, wait=False)
             while self.r_motor.angle() > - self.NINETY_TURN_TIME * ninety_degrees and self.l_motor.angle() < self.NINETY_TURN_TIME * ninety_degrees:
                 if self.color_sensor.reflection() > self.THRESHOLD + 5:
-                    self.r_motor.stop()
-                    self.l_motor.stop()
+                    self.r_motor.hold()
+                    self.l_motor.hold()
                     return True
         else:
             self.r_motor.run_angle(speed, self.NINETY_TURN_TIME * ninety_degrees, wait=False)
             self.l_motor.run_angle(speed, - self.NINETY_TURN_TIME * ninety_degrees, wait=False)
             while self.r_motor.angle() < self.NINETY_TURN_TIME * ninety_degrees and self.l_motor.angle() > - self.NINETY_TURN_TIME * ninety_degrees:
                 if self.color_sensor.reflection() > self.THRESHOLD + 5:
-                    self.r_motor.stop()
-                    self.l_motor.stop()
+                    self.r_motor.hold()
+                    self.l_motor.hold()
                     return True
         self.r_motor.hold()
         self.l_motor.hold()
