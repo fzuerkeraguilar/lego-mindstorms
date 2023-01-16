@@ -41,7 +41,7 @@ class PointFinder(Mode):
             self.drivebase.turn(-90)
             self.drivebase.reset()
 
-        distances[0] -= 150
+        distances[0] -= 100
         distances[1] -= 50
 
         while distances[0] > 0 and distances[1] > 0:

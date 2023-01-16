@@ -17,8 +17,9 @@ class BridgeCrosser(Mode):
     RAMP_LENGTH = 1050
     BRIDGE_LENGTH = 1050
 
-    def __init__(self, color_sensor, distance_sensor, config, speed=INITIAL_SPEED):
+    def __init__(self, color_sensor, distance_sensor, touch_sensor, config, speed=INITIAL_SPEED):
         super().__init__(color_sensor, distance_sensor, config, speed)
+        self.touch_sensor = touch_sensor
         self.drivebase = config.get_drivebase(clean=True)
 
     def run(self):
@@ -64,16 +65,31 @@ class BridgeCrosser(Mode):
             if self.color_sensor.color() == Color.BLUE:
                 self.drivebase.stop()
                 return
-            if self.drivebase.distance() > 650:
-                self.distance_sensor.set_up()
-                self.drivebase.drive(self.DOWN_SPEED, 0)
+            if self.drivebase.distance() > 620:
+                self.try_to_enter_hole()
+                return
             else:
                 distance = self.distance_sensor.distance()
                 if distance > 150:
                     self.drivebase.drive(self.DOWN_SPEED, -10)    
                 else:
-                    self.drivebase.drive(self.DOWN_SPEED, 1)
+                    self.drivebase.drive(self.DOWN_SPEED, 5)
         self.drivebase.stop()
+
+    def try_to_enter_hole(self):
+        self.distance_sensor.set_up()
+        self.drivebase.drive(self.DOWN_SPEED, 0)
+        while True:
+            if self.color_sensor.color() == Color.BLUE:
+                self.drivebase.stop()
+                return True
+            if self.touch_sensor.pressed_right():
+                self.drivebase.straight(-100)
+                self.drivebase.turn(-10)
+            if self.touch_sensor.pressed_left():
+                self.drivebase.straight(-100)
+                self.drivebase.turn(10)
+            self.drivebase.drive(self.DOWN_SPEED, 0)
 
     def play_music(self):
         frequency = [

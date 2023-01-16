@@ -67,6 +67,7 @@ class Main:
                 BridgeCrosser(
                     self.color_sensor,
                     self.distance_sensor,
+                    self.touch_sensor,
                     self.config,
                 ),
                 3
