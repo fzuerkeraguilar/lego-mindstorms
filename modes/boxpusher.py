@@ -9,11 +9,11 @@ from controller.pcontroller import PController
 
 class BoxPusher(Mode):
     WHITE = 30
-    INITIAL_SPEED = 300
+    INITIAL_SPEED = 400
     SLOW_SPEED = 50
     CORRECTION_SPEED = 2
     DISTANCE_BIAS = 5
-    THRESHOLD_DISTANCE = 300
+    THRESHOLD_DISTANCE = 320
 
     UP = 65
     DOWN = 0
@@ -43,8 +43,8 @@ class BoxPusher(Mode):
 
         # align at left wall first tome to be able to drive straight
         self.drivebase.turn(-90)
-        self.drivebase.straight(200)
-        self.drivebase.straight(-200)
+        self.drivebase.straight(400)
+        self.drivebase.straight(-230)
         self.drivebase.turn(90)
 
         # drive forward until in reach of box
@@ -52,7 +52,7 @@ class BoxPusher(Mode):
 
         # align at left wall
         self.drivebase.turn(-90)
-        self.drivebase.straight(200)
+        self.drivebase.straight(300)
         self.drivebase.straight(-70)
         self.drivebase.turn(90)
 
@@ -61,21 +61,17 @@ class BoxPusher(Mode):
             self.distance_sensor.turn_motor.run(200)
 
     def push_box(self):
-        self.hub.speaker.beep()
         # find the box
         self.hub.screen.print("find box")
         self.distance_sensor.set_up()
         self.distance_sensor.set_angle(80)
-        # self.distance_sensor.set_up()
-        # self.distance_sensor.set_angle(80)
-        # self.align_sensor()
+        
         self.drive_until_box_found(self.THRESHOLD_DISTANCE)
         self.drive_until_box_lost(self.THRESHOLD_DISTANCE)
-        self.drivebase.straight(-100)
+        self.drivebase.straight(-50)
         self.drivebase.turn(90)
 
         # push box to the wall
-        self.hub.screen.print("push box 1")
         self.drivebase.straight(700)
 
         # set back and turn
@@ -92,24 +88,14 @@ class BoxPusher(Mode):
         self.drivebase.straight(550)
     
     def find_end_pos(self):
-        self.hub.screen.print("find end pos")
-        self.hub.speaker.beep()
-
+        # align at wall
         self.drivebase.straight(-70)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
+
+        # face ramp
         self.drivebase.straight(-330)
         self.drivebase.turn(90)
-        # align at back wall
-        # self.drivebase.straight(-230)
-
-        # # set back
-        # self.drivebase.straight(-50)
-        # self.drivebase.turn(90)
-        
-        # self.drivebase.straight(300)
-        # self.drivebase.stop()
-        # self.drivebase.turn(-90)
 
         # find blue line
         self.drivebase.straight(550)
@@ -143,52 +129,27 @@ class BoxPusher(Mode):
 
         self.drivebase.stop()
 
-    def drive_until_line(self, speed=INITIAL_SPEED):
-        "Drive forward until a white line is found"
-
-        self.hub.screen.print("until line")
-        self.hub.speaker.beep()
-
-        self.drivebase.drive(speed, 0)
-        while self.color_sensor.reflection() < self.WHITE:
-            continue
-        self.drivebase.stop()
-
-    # def drive_until_threshold_met(self, threshold_distance, speed, overshoot_time):
-
     def drive_until_box_found(
-        self, threshold_distance, speed=INITIAL_SPEED, overshoot_time=0
+        self, threshold_distance
     ):
-        "Drive forward until an object at threshold_distance is detected. Then keep driving for overshoot_time."
-        "Positive threshold to detect objects entering the view, negative for objects leaving."
-        self.hub.screen.print("until threshold")
-        self.hub.speaker.beep()
+        self.drivebase.drive(self.INITIAL_SPEED, 0)
 
-        self.drivebase.drive(speed, 0)
+        times_found = 0
+        while times_found < 5:
+            if self.distance_sensor.distance() < threshold_distance:
+                times_found = times_found + 1
 
-        while self.distance_sensor.distance() > threshold_distance:
-            self.hub.screen.print(self.distance_sensor.distance())
-            pass
-
-        # wait(overshoot_time) # keep driving for overshoot_time.
-        # self.drivebase.straight(50)
         self.drivebase.stop()
 
 
     def drive_until_box_lost(
-        self, threshold_distance, speed=INITIAL_SPEED, overshoot_time=0
+        self, threshold_distance
     ):
-        # "Drive forward until an object at threshold_distance is detected. Then keep driving for overshoot_time."
-        # "Positive threshold to detect objects entering the view, negative for objects leaving."
-        self.hub.screen.print("until threshold")
-        self.hub.speaker.beep()
-
         self.drivebase.drive(self.SLOW_SPEED, 0)
 
-        while self.distance_sensor.distance() < threshold_distance:
-            self.hub.screen.print(self.distance_sensor.distance())
-            pass
+        times_lost = 0
+        while times_lost < 5:
+            if self.distance_sensor.distance() > threshold_distance:
+                times_lost = times_lost + 1
 
-        # wait(overshoot_time) # keep driving for overshoot_time.
-        self.hub.speaker.beep(frequency=8000)
         self.drivebase.stop()
