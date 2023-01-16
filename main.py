@@ -20,6 +20,7 @@ from modes.pointfinder import PointFinder
 from modes.debug import Debug
 from modes.calibration import Calibration
 from turning_distance_sensor import TurningDistanceSensor
+from multitouch_sensor import MultitouchSensor
 from menu import Menu
 
 
@@ -31,7 +32,9 @@ class Main:
         self.distance_motor = Motor(Port.C)
         self.ultrasonic_sensor = UltrasonicSensor(Port.S4)
         self.color_sensor = ColorSensor(Port.S1)
-        self.touch_sensor = TouchSensor(Port.S2)
+        self.left_touch_sensor = TouchSensor(Port.S3)
+        self.right_touch_sensor = TouchSensor(Port.S2)
+        self.touch_sensor = MultitouchSensor(self.left_touch_sensor, self.right_touch_sensor)
         self.distance_sensor = TurningDistanceSensor(
             self.distance_motor, self.ultrasonic_sensor
         )
