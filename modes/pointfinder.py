@@ -66,6 +66,69 @@ class PointFinder(Mode):
         else:
             self.drivebase.drive(self.INITIAL_SPEED, 3)
     
+    def spiral_search(self):
+        self.drivebase.reset()
+        length = 0
+        while not self.touch_sensor.pressed():
+            self.drivebase.drive(self.INITIAL_SPEED, 0)
+            if self.check_color():
+                return
+        self.drivebase.stop()
+        length = self.drivebase.distance()
+        self.drivebase.straight(-20)
+        self.drivebase.turn(-90)
+        self.drivebase.reset()
+        width = 0
+        while not self.touch_sensor.pressed():
+            self.drivebase.drive(self.INITIAL_SPEED, 0)
+            if self.check_color():
+                return
+        self.drivebase.stop()
+        width = self.drivebase.distance()
+        self.drivebase.straight(-20)
+        self.drivebase.turn(-90)
+        self.drivebase.reset()
+        while self.drivebase.distance() < length:
+            self.drivebase.drive(self.INITIAL_SPEED, 0)
+            if self.check_color():
+                return
+        self.drivebase.stop()
+        self.drivebase.straight(-20)
+        self.drivebase.turn(-90)
+        self.drivebase.reset()
+        while self.drivebase.distance() < width:
+            self.drivebase.drive(self.INITIAL_SPEED, 0)
+            if self.check_color():
+                return
+        self.drivebase.stop()
+        self.drivebase.straight(-20)
+        self.drivebase.turn(-90)
+        self.drivebase.reset()
+        while self.drivebase.distance() < length / 2:
+            self.drivebase.drive(self.INITIAL_SPEED, 0)
+            if self.check_color():
+                return
+        self.drivebase.stop()
+        self.drivebase.turn(-90)
+        self.drivebase.reset()
+        while self.drivebase.distance() < width / 2:
+            self.drivebase.drive(self.INITIAL_SPEED, 0)
+            if self.check_color():
+                return
+        self.drivebase.stop()
+        # Drive spirally until both colors are found or wall is hit
+        # Decrease turn_rate by 1 every 10 cm
+        while True:
+            turn_rate = 90
+            self.drivebase.drive(self.INITIAL_SPEED, turn_rate)
+            if self.check_color():
+                return
+            if self.drivebase.distance() % 10 == 0:
+                turn_rate -= 1
+                self.hub.screen.print("Turn rate: ", turn_rate)
+            
+            
+
     def check_color(self):
         color = self.color_sensor.color()
         if not self.red_found and color == Color.RED:
