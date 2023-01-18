@@ -38,36 +38,38 @@ class LineFollower(Mode):
         self.config = config
         self.WHITE, self.BLACK = self.config.get_wb()
         self.THRESHOLD = (self.BLACK + self.WHITE) / 2
-        self.logger = DataLog("timestamp","reflection", "speed", "turn_rate")
+        self.logger = DataLog("timestamp", "reflection", "speed", "turn_rate", "distance", "LAST_FOUND_RIGHT")
         self.watch = StopWatch()
 
     def follow_line(self):
-        if self.touch_sensor.pressed():
-            self.avoid_obstacle()
+        while True:
+            if self.touch_sensor.pressed():
+                self.avoid_obstacle()
 
-        # Calculate the deviation from the threshold.
-        reflection = self.color_sensor.reflection()
-        deviation = reflection - self.THRESHOLD
+            # Calculate the deviation from the threshold.
+            reflection = self.color_sensor.reflection()
 
-        if reflection <= self.BLACK:
-            self.speed = self.INITIAL_SPEED
-            # blue line is "Black" for reflection. Check here whether we lost line or found blue line
-            if self.color_sensor.color() == Color.BLUE:
-                self.drivebase.stop()
-                return False
+            if reflection <= self.BLACK:
+                self.speed = self.INITIAL_SPEED
+                # blue line is "Black" for reflection. Check here whether we lost line or found blue line
+                if self.color_sensor.color() == Color.BLUE:
+                    self.drivebase.stop()
+                    return
 
-            if not self.find_line_direct():
-                self.bridge_gap()
+                if not self.find_line_direct():
+                    self.bridge_gap()
 
-        if abs(deviation) < 5:
-            self.speed = min(self.TOP_SPEED, self.speed + 2)
-        if abs(deviation) > 10:
-            self.speed = max(self.INITIAL_SPEED, self.speed * 0.8)
+                self.logger.log(self.watch.time(), reflection, -1, 0, self.drivebase.distance(), self.LAST_FOUND_RIGHT)
+            else:
+                deviation = reflection - self.THRESHOLD
+                if abs(deviation) < 5:
+                    self.speed = min(self.TOP_SPEED, self.speed + 2)
+                if abs(deviation) > 10:
+                    self.speed = max(self.INITIAL_SPEED, self.speed * 0.8)
 
-        turn_rate = self.GAIN * deviation
-        self.drivebase.drive(self.speed, turn_rate)
-        self.logger.log(self.watch.time(), reflection, self.speed, turn_rate)
-        return True
+                turn_rate = self.GAIN * deviation
+                self.drivebase.drive(self.speed, turn_rate)
+                self.logger.log(self.watch.time(), reflection, self.speed, turn_rate, self.drivebase.distance(), self.LAST_FOUND_RIGHT)
 
     def avoid_obstacle(self):
         self.drivebase.stop()
@@ -81,6 +83,7 @@ class LineFollower(Mode):
         self.drivebase.straight(200)
         self.drivebase.turn(90)
         self.drivebase.straight(-80)
+        self.drivebase.straight(10)
         self.find_line_direct()
 
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):
@@ -108,7 +111,6 @@ class LineFollower(Mode):
                     return True
         self.r_motor.hold()
         self.l_motor.hold()
-        wait(100)
         return False
 
     def find_line_direct(self):
@@ -131,6 +133,5 @@ class LineFollower(Mode):
     def run(self):
         self.distance_sensor.set_up()
         self.watch.reset()
-        while Button.CENTER not in self.hub.buttons.pressed():
-            if not self.follow_line():
-                break
+        self.hub.speaker.beep()
+        self.follow_line()
