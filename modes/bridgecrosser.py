@@ -10,8 +10,8 @@ class BridgeCrosser(Mode):
 
     RAMP_ANGLE = 15
     INITIAL_SPEED = 70
-    UP_SPEED = 150
-    STRAIGHT_SPEED = 200
+    UP_SPEED = 500
+    STRAIGHT_SPEED = 500
     DOWN_SPEED = 100
     WALL_DISTANCE = 572
     RAMP_LENGTH = 1050
@@ -35,15 +35,15 @@ class BridgeCrosser(Mode):
 
     def drive_up_ramp(self):
         self.drivebase.reset()
-        while self.drivebase.distance() < self.RAMP_LENGTH: 
+        while self.drivebase.distance() < self.RAMP_LENGTH + 30: 
             if Button.CENTER in self.hub.buttons.pressed():
                 self.drivebase.stop()
                 return False
             distance = self.distance_sensor.distance()
             if distance > 150:
                 self.drivebase.drive(self.UP_SPEED, -15)    
-            else :
-                self.drivebase.drive(self.UP_SPEED, 2)
+            else:
+                self.drivebase.drive(self.UP_SPEED, 3)
         self.drivebase.stop()
 
     def drive_straight(self, drive_distance):
@@ -60,8 +60,8 @@ class BridgeCrosser(Mode):
             distance = self.distance_sensor.distance()
             if distance > 150:
                 self.drivebase.drive(self.STRAIGHT_SPEED, -10)    
-            else :
-                self.drivebase.drive(self.STRAIGHT_SPEED, 1)
+            else:
+                self.drivebase.drive(self.STRAIGHT_SPEED, 3)
         self.drivebase.stop()
 
     def drive_down_ramp(self):
