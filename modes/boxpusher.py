@@ -1,5 +1,5 @@
 from pybricks.hubs import EV3Brick
-from pybricks.parameters import Color
+from pybricks.parameters import Color, Button
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor
 from modes.mode import Mode
@@ -26,9 +26,16 @@ class BoxPusher(Mode):
 
     def run(self):
         self.drivebase.settings(self.speed, None, self.speed)
-        self.find_start_pos()
-        self.push_box()
-        self.find_end_pos()
+        if self.find_start_pos() == False:
+            return False
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
+        if self.push_box() == False:
+            return False
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
+        if self.find_end_pos() == False:
+            return False
 
     def find_start_pos(self):
         self.hub.screen.print("find start pos")
@@ -36,14 +43,23 @@ class BoxPusher(Mode):
 
         self.drivebase.straight(200)
 
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
+
         # align at left wall first tome to be able to drive straight
         self.drivebase.turn(-90)
         self.drivebase.straight(400)
         self.drivebase.straight(-230)
         self.drivebase.turn(90)
 
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
+
         # drive forward until in reach of box
         self.drivebase.straight(1000)
+
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
 
         # align at left wall
         self.drivebase.turn(-90)
@@ -66,8 +82,14 @@ class BoxPusher(Mode):
         self.drivebase.straight(-50)
         self.drivebase.turn(90)
 
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
+
         # push box to the wall
         self.drivebase.straight(700)
+
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
 
         # set back and turn
         self.drivebase.straight(-70)
@@ -79,6 +101,9 @@ class BoxPusher(Mode):
         self.drivebase.straight(-60)
         self.drivebase.turn(-90)
 
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
+
         # push box to the wall
         self.drivebase.straight(550)
     
@@ -88,9 +113,15 @@ class BoxPusher(Mode):
         self.drivebase.turn(90)
         self.drivebase.straight(200)
 
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
+
         # face ramp
         self.drivebase.straight(-330)
         self.drivebase.turn(90)
+
+        if Button.CENTER in self.hub.buttons.pressed():
+            return False
 
         # find blue line
         self.drivebase.straight(550)

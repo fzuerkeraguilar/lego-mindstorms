@@ -1,5 +1,5 @@
 from pybricks.hubs import EV3Brick
-from pybricks.parameters import Color
+from pybricks.parameters import Color, Button
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import TouchSensor, ColorSensor
 from modes.mode import Mode
@@ -24,15 +24,21 @@ class BridgeCrosser(Mode):
 
     def run(self):
         self.distance_sensor.set_down()
-        self.drive_up_ramp()
+        if self.drive_up_ramp() == False:
+            return False
         self.drivebase.turn(-90)
-        self.drive_straight(1260)
+        if self.drive_straight(1260) == False:
+            return False
         self.drivebase.turn(-90)
-        self.drive_down_ramp()
+        if self.drive_down_ramp() == False:
+            return False
 
     def drive_up_ramp(self):
         self.drivebase.reset()
         while self.drivebase.distance() < self.RAMP_LENGTH: 
+            if Button.CENTER in self.hub.buttons.pressed():
+                self.drivebase.stop()
+                return False
             distance = self.distance_sensor.distance()
             if distance > 150:
                 self.drivebase.drive(self.UP_SPEED, -15)    
@@ -44,6 +50,9 @@ class BridgeCrosser(Mode):
         self.distance_sensor.set_angle(0)
         self.drivebase.reset()
         while self.drivebase.distance() < drive_distance:
+            if Button.CENTER in self.hub.buttons.pressed():
+                self.drivebase.stop()
+                return False
             if self.color_sensor.reflection() == 0:
                 self.drivebase.stop()
                 self.drivebase.straight(-40)
@@ -58,6 +67,9 @@ class BridgeCrosser(Mode):
     def drive_down_ramp(self):
         self.drivebase.reset()
         while self.drivebase.distance() < self.RAMP_LENGTH - 200:
+            if Button.CENTER in self.hub.buttons.pressed():
+                self.drivebase.stop()
+                return False
             if self.color_sensor.color() == Color.BLUE:
                 self.drivebase.stop()
                 return
