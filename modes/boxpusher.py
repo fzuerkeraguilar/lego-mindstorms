@@ -23,8 +23,6 @@ class BoxPusher(Mode):
     ):
         super().__init__(color_sensor, distance_sensor, config, speed)
         self.touch_sensor = touch_sensor
-        self.watch = StopWatch()
-        self.logger = DataLog("timestamp", "distance")
 
     def run(self):
         self.drivebase.settings(self.speed, None, self.speed)
@@ -79,7 +77,6 @@ class BoxPusher(Mode):
         self.distance_sensor.set_up()
         self.distance_sensor.set_angle(80)
         
-        self.watch.reset()
         self.drive_until_box_found(self.THRESHOLD_DISTANCE)
         self.drivebase.reset()
         self.drive_until_box_lost(self.THRESHOLD_DISTANCE)
@@ -142,7 +139,6 @@ class BoxPusher(Mode):
         times_found = 0
         while times_found < 1:
             dist = self.distance_sensor.distance()
-            self.logger.log(self.watch.time(), dist)
             if dist < threshold_distance:
                 times_found = times_found + 1
             else:
@@ -159,7 +155,6 @@ class BoxPusher(Mode):
         times_lost = 0
         while times_lost < 5:
             dist = self.distance_sensor.distance()
-            self.logger.log(self.watch.time(), dist)
             if dist > threshold_distance:
                 times_lost = times_lost + 1
             else:
