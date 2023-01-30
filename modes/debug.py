@@ -34,32 +34,7 @@ class Debug(Mode):
         # self.left_motor.run_time(-600, 1300, then=Stop.BRAKE, wait=False)
 
         while True:
-            color = self.color_sensor.color()
-            
-            if color == Color.BLACK:
-                self.hub.screen.print("BLACK")
-                continue
-            elif color == Color.BLUE:
-                self.hub.screen.print("BLUE")
-                continue
-            elif color == Color.GREEN:
-                self.hub.screen.print("GREEN")
-                continue
-            elif color == Color.YELLOW:
-                self.hub.screen.print("YELLOW")
-                continue
-            elif color == Color.RED:
-                self.hub.screen.print("RED")
-                continue
-            elif color == Color.WHITE:
-                self.hub.screen.print("WHITE")
-                continue
-            elif color == Color.BROWN:
-                self.hub.screen.print("BROWN")
-                continue
-            else:
-                self.hub.screen.print("UNKNOWN")
-                continue
+            self.drivebase.drive(100, 360)
 
     def rgb_to_hsv(self, rgb):
         r = rgb[0]
