@@ -122,6 +122,6 @@ class LineFollower(Mode):
 
     def run(self):
         self.distance_sensor.set_up()
-        print(self.drivebase.heading_control.limits(speed=200))
+        self.drivebase.heading_control.limits(speed=200)
         self.follow_line()
         self.drivebase.stop()
