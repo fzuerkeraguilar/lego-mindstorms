@@ -26,7 +26,7 @@ class BoxPusher(Mode):
         self.touch_sensor = touch_sensor
 
     def run(self):
-        self.drivebase.settings(self.speed, 2 * self.speed, self.speed, 2 * self.speed)
+        self.drivebase.settings(self.speed, 2 * self.speed, self.speed // 2, self.speed)
         if self.find_start_pos() == False:
             return False
         if Button.CENTER in self.hub.buttons.pressed():
@@ -80,6 +80,7 @@ class BoxPusher(Mode):
         
         self.drive_until_box_found(self.THRESHOLD_DISTANCE)
         self.drivebase.reset()
+        wait(50)
         self.drive_until_box_lost(self.THRESHOLD_DISTANCE)
         setback = self.drivebase.distance() // 2
         self.drivebase.straight(-setback)
@@ -101,7 +102,7 @@ class BoxPusher(Mode):
         self.drivebase.straight(230)
         self.drivebase.turn(-90)
         self.drivebase.straight(250)
-        self.drivebase.straight(-60)
+        self.drivebase.straight(-80)
         self.drivebase.turn(-90)
 
         if Button.CENTER in self.hub.buttons.pressed():
@@ -138,7 +139,7 @@ class BoxPusher(Mode):
         self.drivebase.drive(self.MEDIUM_SPEED, 0)
 
         times_found = 0
-        while times_found < 1:
+        while times_found < 5:
             dist = self.distance_sensor.distance()
             if dist < threshold_distance:
                 times_found = times_found + 1
