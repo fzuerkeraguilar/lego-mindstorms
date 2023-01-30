@@ -109,6 +109,11 @@ class Main:
             else:
                 if program.run() == False:
                     next_program = None
+                    self.ev3.speaker.beep(400)
+                    self.ev3.screen.print("Stopped. Press Up")
+                    while Button.UP not in self.ev3.buttons.pressed():
+                        pass
+                    
                 # try:
                 #     if program.run() == False:
                 #         next_program = None
