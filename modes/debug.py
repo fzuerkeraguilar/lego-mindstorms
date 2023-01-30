@@ -28,6 +28,18 @@ class Debug(Mode):
         self.right_motor = self.drivebase.right
 
     def run(self):
+
+        logger = DataLog("timestamp", "distance")
+        watch = StopWatch()
+        self.distance_sensor.set_up()
+        self.distance_sensor.set_angle(80)
+        self.drivebase.drive(50, 0)
+        watch.reset()
+        while True:
+            dist = self.distance_sensor.distance()
+            logger.log(watch.time(), dist)
+
+
         # self.right_motor.reset_angle(0)
         # self.left_motor.reset_angle(0)
         # self.right_motor.run_time(600, 1300, then=Stop.BRAKE, wait=False)
