@@ -9,8 +9,9 @@ from controller.pcontroller import PController
 
 class BoxPusher(Mode):
     WHITE = 30
-    INITIAL_SPEED = 400
+    INITIAL_SPEED = 500
     SLOW_SPEED = 50
+    MEDIUM_SPEED = 400
     THRESHOLD_DISTANCE = 300
 
     def __init__(
@@ -25,7 +26,7 @@ class BoxPusher(Mode):
         self.touch_sensor = touch_sensor
 
     def run(self):
-        self.drivebase.settings(self.speed, None, self.speed)
+        self.drivebase.settings(self.speed, 2 * self.speed, self.speed, 2 * self.speed)
         if self.find_start_pos() == False:
             return False
         if Button.CENTER in self.hub.buttons.pressed():
@@ -134,7 +135,7 @@ class BoxPusher(Mode):
     def drive_until_box_found(
         self, threshold_distance
     ):
-        self.drivebase.drive(self.INITIAL_SPEED, 0)
+        self.drivebase.drive(self.MEDIUM_SPEED, 0)
 
         times_found = 0
         while times_found < 1:
