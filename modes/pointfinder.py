@@ -9,7 +9,7 @@ import random
 
 
 class PointFinder(Mode):
-    INITIAL_SPEED = 300
+    INITIAL_SPEED = 700
     INITIAL_SIDE_LENGTH = 1000
     BOX_LENGTH = 980
     BOX_WIDTH = 950
