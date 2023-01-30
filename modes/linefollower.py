@@ -11,7 +11,7 @@ class LineFollower(Mode):
     BLACK = 6
     WHITE = 41
     THRESHOLD = (BLACK + WHITE) // 2
-    GAIN = 3
+    GAIN = 4
 
     LAST_FOUND_RIGHT = True
 
@@ -38,7 +38,6 @@ class LineFollower(Mode):
         self.config = config
         self.WHITE, self.BLACK = self.config.get_wb()
         self.THRESHOLD = (self.BLACK + self.WHITE) // 2
-        self.log = DataLog("deviation", "speed", "turn_rate")
 
     def follow_line(self):
         while Button.CENTER not in self.hub.buttons.pressed():
@@ -62,25 +61,23 @@ class LineFollower(Mode):
                 if abs(deviation) < self.THRESHOLD // 2:
                     self.speed = min(self.TOP_SPEED, self.speed + 2)
                 if abs(deviation) > self.THRESHOLD // 2:
-                    self.speed = max(self.INITIAL_SPEED, self.speed - 5)
+                    self.speed = max(self.INITIAL_SPEED, self.speed - 7)
 
                 turn_rate = self.GAIN * deviation
                 self.drivebase.drive(self.speed, turn_rate)
-            self.log.log(deviation, self.speed, turn_rate)
 
     def avoid_obstacle(self):
         self.drivebase.stop()
         self.drivebase.settings(self.speed, None, self.speed, None)
-        self.drivebase.straight(-50)
+        self.drivebase.straight(-30)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(360)
+        self.drivebase.straight(370)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
-        self.drivebase.straight(-80)
-        self.find_line_direct()
+        self.drivebase.straight(-40)
 
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):
         self.drivebase.stop()
@@ -92,7 +89,7 @@ class LineFollower(Mode):
             self.r_motor.run_angle(speed, - self.NINETY_TURN_TIME * ninety_degrees, wait=False)
             self.l_motor.run_angle(speed, self.NINETY_TURN_TIME * ninety_degrees, wait=False)
             while self.r_motor.angle() > - self.NINETY_TURN_TIME * ninety_degrees and self.l_motor.angle() < self.NINETY_TURN_TIME * ninety_degrees:
-                if self.color_sensor.reflection() > self.THRESHOLD + 3:
+                if self.color_sensor.reflection() > self.THRESHOLD:
                     self.r_motor.hold()
                     self.l_motor.hold()
                     return True
@@ -100,12 +97,10 @@ class LineFollower(Mode):
             self.r_motor.run_angle(speed, self.NINETY_TURN_TIME * ninety_degrees, wait=False)
             self.l_motor.run_angle(speed, - self.NINETY_TURN_TIME * ninety_degrees, wait=False)
             while self.r_motor.angle() < self.NINETY_TURN_TIME * ninety_degrees and self.l_motor.angle() > - self.NINETY_TURN_TIME * ninety_degrees:
-                if self.color_sensor.reflection() > self.THRESHOLD + 3:
+                if self.color_sensor.reflection() > self.THRESHOLD:
                     self.r_motor.hold()
                     self.l_motor.hold()
                     return True
-        self.r_motor.hold()
-        self.l_motor.hold()
         return False
 
     def find_line_direct(self):
@@ -126,6 +121,7 @@ class LineFollower(Mode):
         self.drivebase.stop()
 
     def run(self):
-        self.distance_sensor.set_angle(75)
+        self.distance_sensor.set_up()
         print(self.drivebase.heading_control.limits(speed=200))
         self.follow_line()
+        self.drivebase.stop()
