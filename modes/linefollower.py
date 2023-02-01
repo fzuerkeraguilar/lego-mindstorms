@@ -15,8 +15,13 @@ class LineFollower(Mode):
 
     LAST_FOUND_RIGHT = True
 
-    INITIAL_SPEED = 50
+    INITIAL_SPEED = 70
     TOP_SPEED = 300
+    SPEED_GAIN = 0.1
+    STEP_SIZE = 10
+    WAIT_TIME = 5
+    INITIAL_TURN = 50
+    RIGHT_ANGLE_TURN_TIME = 2000
     NINETY_TURN_TIME = 575
 
     def __init__(
@@ -34,8 +39,13 @@ class LineFollower(Mode):
         self.config = config
         self.WHITE, self.BLACK = self.config.get_wb()
         self.THRESHOLD = (self.BLACK + self.WHITE) // 2
+        self.speed_timer = StopWatch()
 
     def follow_line(self):
+        self.speed_timer.reset()
+        base_speed = self.INITIAL_SPEED
+        current_speed = base_speed
+
         while Button.CENTER not in self.hub.buttons.pressed():
             if self.touch_sensor.pressed():
                 self.avoid_obstacle()
@@ -45,7 +55,6 @@ class LineFollower(Mode):
             deviation = reflection - self.THRESHOLD
 
             if reflection <= self.BLACK:
-                self.speed = self.INITIAL_SPEED
                 # blue line is "Black" for reflection. Check here whether we lost line or found blue line
                 if self.color_sensor.color() == Color.BLUE:
                     self.drivebase.stop()
@@ -53,14 +62,23 @@ class LineFollower(Mode):
 
                 if not self.find_line_direct():
                     self.bridge_gap()
+
+                base_speed = self.INITIAL_SPEED
+                current_speed = base_speed
+                self.speed_timer.reset()
             else :
-                if abs(deviation) < self.THRESHOLD // 2:
-                    self.speed = min(self.TOP_SPEED, self.speed + 2)
-                if abs(deviation) > self.THRESHOLD // 2:
-                    self.speed = max(self.INITIAL_SPEED, self.speed - 5)
+                if self.speed_timer.time() > 100 and abs(deviation) > self.THRESHOLD // 2:
+                    base_speed = (current_speed * 2) // 3 # reset base to 2/3 of max reached speed
+                    current_speed = max(self.INITIAL_SPEED, base_speed)
+                    self.speed_timer.reset()
+                else if abs(deviation) > self.THRESHOLD // 3:
+                    self.speed_timer.pause() # pause speed increase
+                else:
+                    self.speed_timer.resume() # increase speed based on elapsed time since last detour
+                    current_speed = max(self.TOP_SPEED, base_speed + self.SPEED_GAIN * self.speed_timer.time())
 
                 turn_rate = self.GAIN * deviation
-                self.drivebase.drive(self.speed, turn_rate)
+                self.drivebase.drive(current_speed, turn_rate)
 
     def avoid_obstacle(self):
         self.drivebase.stop()
