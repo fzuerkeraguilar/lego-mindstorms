@@ -2,7 +2,7 @@ from pybricks.hubs import EV3Brick
 from pybricks.parameters import Color, Stop, Button
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import Motor, TouchSensor, ColorSensor, UltrasonicSensor
-from pybricks.tools import wait, StopWatch, DataLog
+from pybricks.tools import wait
 from modes.mode import Mode
 from math import floor
 
@@ -15,12 +15,8 @@ class LineFollower(Mode):
 
     LAST_FOUND_RIGHT = True
 
-    INITIAL_SPEED = 70
+    INITIAL_SPEED = 50
     TOP_SPEED = 200
-    STEP_SIZE = 10
-    WAIT_TIME = 5
-    INITIAL_TURN = 50
-    RIGHT_ANGLE_TURN_TIME = 2000
     NINETY_TURN_TIME = 575
 
     def __init__(
@@ -58,9 +54,9 @@ class LineFollower(Mode):
                 if not self.find_line_direct():
                     self.bridge_gap()
             else :
-                if abs(deviation) < self.THRESHOLD // 2:
+                if abs(deviation) + 1 < self.THRESHOLD // 2:
                     self.speed = min(self.TOP_SPEED, self.speed + 2)
-                if abs(deviation) > self.THRESHOLD // 2:
+                if abs(deviation) - 1 > self.THRESHOLD // 2:
                     self.speed = max(self.INITIAL_SPEED, self.speed - 7)
 
                 turn_rate = self.GAIN * deviation
@@ -68,7 +64,7 @@ class LineFollower(Mode):
 
     def avoid_obstacle(self):
         self.drivebase.stop()
-        self.drivebase.settings(self.speed, None, self.speed, None)
+        self.drivebase.settings(self.TOP_SPEED // 2, None, self.TOP_SPEED // 2, None)
         self.drivebase.straight(-30)
         self.drivebase.turn(90)
         self.drivebase.straight(200)
