@@ -103,6 +103,7 @@ class Main:
         next_program = None
         while True:
             program, next_program = menu.show(autoselect=next_program)
+            self.ev3.speaker.beep()
 
             if program == None:
                 return
