@@ -2,7 +2,7 @@ from pybricks.hubs import EV3Brick
 from pybricks.parameters import Color, Stop, Button
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import Motor, TouchSensor, ColorSensor, UltrasonicSensor
-from pybricks.tools import wait
+from pybricks.tools import wait, StopWatch, DataLog
 from modes.mode import Mode
 from math import floor
 
@@ -46,6 +46,9 @@ class LineFollower(Mode):
         base_speed = self.INITIAL_SPEED
         current_speed = base_speed
 
+        logger = DataLog("timestamp", "deviation", "speed", "turn")
+        watch = StopWatch()
+
         while Button.CENTER not in self.hub.buttons.pressed():
             if self.touch_sensor.pressed():
                 self.avoid_obstacle()
@@ -63,21 +66,22 @@ class LineFollower(Mode):
                 if not self.find_line_direct():
                     self.bridge_gap()
 
-                base_speed = self.INITIAL_SPEED
-                current_speed = base_speed
+                # base_speed = self.INITIAL_SPEED
+                # current_speed = base_speed
                 self.speed_timer.reset()
             else :
-                if self.speed_timer.time() > 100 and abs(deviation) > self.THRESHOLD // 2:
-                    base_speed = (current_speed * 2) // 3 # reset base to 2/3 of max reached speed
-                    current_speed = max(self.INITIAL_SPEED, base_speed)
+                if self.speed_timer.time() > 100 and abs(deviation) > (self.THRESHOLD // 2):
+                    base_speed = max(self.INITIAL_SPEED, (current_speed * 3) // 4) # reset base to 3/4 of max reached speed
+                    current_speed = base_speed
                     self.speed_timer.reset()
-                else if abs(deviation) > self.THRESHOLD // 3:
+                elif abs(deviation) > (self.THRESHOLD // 4):
                     self.speed_timer.pause() # pause speed increase
                 else:
                     self.speed_timer.resume() # increase speed based on elapsed time since last detour
-                    current_speed = max(self.TOP_SPEED, base_speed + self.SPEED_GAIN * self.speed_timer.time())
+                    current_speed = min(self.TOP_SPEED, base_speed + self.SPEED_GAIN * self.speed_timer.time())
 
                 turn_rate = self.GAIN * deviation
+                logger.log(watch.time(), deviation, current_speed, turn_rate)
                 self.drivebase.drive(current_speed, turn_rate)
 
     def avoid_obstacle(self):
