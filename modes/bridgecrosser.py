@@ -81,7 +81,7 @@ class BridgeCrosser(Mode):
                 if distance > 150:
                     self.drivebase.drive(self.DOWN_SPEED, -10)    
                 else:
-                    self.drivebase.drive(self.DOWN_SPEED, 3)
+                    self.drivebase.drive(self.DOWN_SPEED, 2)
         self.drivebase.stop()
 
     def try_to_enter_hole(self):

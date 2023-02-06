@@ -9,7 +9,7 @@ import random
 
 
 class PointFinder(Mode):
-    INITIAL_SPEED = 700
+    INITIAL_SPEED = 500
     INITIAL_SIDE_LENGTH = 1000
     BOX_LENGTH = 980
     BOX_WIDTH = 950
@@ -27,22 +27,25 @@ class PointFinder(Mode):
         self.distance_sensor.set_up()
         while distances[0] > 0 and distances[1] > 0:
             for i in range(0, 2):
-                wall_distance = self.distance_sensor.distance()
-                while self.drivebase.distance() < distances[i] and not self.touch_sensor.pressed():
+                wall_distance = min(max(self.distance_sensor.distance(), 50), self.BOX_LENGTH)
+                while self.drivebase.distance() < distances[i] and not self.touch_sensor.pressed_left():
                     self.drive_guided_straight(wall_distance)
                     if self.check_color():
                         return
                 self.drivebase.stop()
-                if self.touch_sensor.pressed():
+                if self.touch_sensor.pressed_left():
                     distances[i] = self.drivebase.distance()
                     self.drivebase.straight(-30)
-                distances[i] -= 60
+                distances[i] -= 50
                 self.drivebase.turn(-90)
                 self.drivebase.reset()
 
     def drive_guided_straight(self, wall_distance_mm):
         current_distance = self.distance_sensor.distance()
-        if current_distance < wall_distance_mm or current_distance > self.BOX_LENGTH:
+        if current_distance >= self.BOX_LENGTH:
+            self.drivebase.drive(self.INITIAL_SPEED, -10)
+            return
+        if current_distance < wall_distance_mm:
             self.drivebase.drive(self.INITIAL_SPEED, -5)
         else:
             self.drivebase.drive(self.INITIAL_SPEED, 5)
@@ -66,6 +69,8 @@ class PointFinder(Mode):
         return False
 
     def run(self):
+        self.red_found = False
+        self.white_found = False
         self.drivebase.reset()
         self.drivebase.settings(self.INITIAL_SPEED, 1000, self.INITIAL_SPEED, 1000)
         self.drivebase.straight(80)

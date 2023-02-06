@@ -128,7 +128,10 @@ class BoxPusher(Mode):
             return False
 
         # find blue line
-        self.drivebase.straight(550)
+        self.drivebase.reset()
+        self.distance_sensor.set_up()
+        while self.drivebase.distance() < 550:
+            self.drive_guided_straight(520)
         while self.color_sensor.color() != Color.BLUE:
             self.drivebase.drive(50, 0)
         self.drivebase.stop()   
@@ -148,6 +151,12 @@ class BoxPusher(Mode):
 
         self.drivebase.stop()
 
+    def drive_guided_straight(self, wall_distance_mm):
+        current_distance = self.distance_sensor.distance()
+        if current_distance < wall_distance_mm:
+            self.drivebase.drive(self.INITIAL_SPEED, -5)
+        else:
+            self.drivebase.drive(self.INITIAL_SPEED, 5)
 
     def drive_until_box_lost(
         self, threshold_distance
