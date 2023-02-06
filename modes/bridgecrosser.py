@@ -35,7 +35,7 @@ class BridgeCrosser(Mode):
 
     def drive_up_ramp(self):
         self.drivebase.reset()
-        while self.drivebase.distance() < self.RAMP_LENGTH + 30 and Button.CENTER not in self.hub.buttons.pressed(): 
+        while self.drivebase.distance() < self.RAMP_LENGTH + 30: 
             if Button.CENTER in self.hub.buttons.pressed():
                 self.drivebase.stop()
                 return False
@@ -49,7 +49,7 @@ class BridgeCrosser(Mode):
     def drive_straight(self, drive_distance):
         self.distance_sensor.set_angle(0)
         self.drivebase.reset()
-        while self.drivebase.distance() < drive_distance and Button.CENTER not in self.hub.buttons.pressed():
+        while self.drivebase.distance() < drive_distance:
             if Button.CENTER in self.hub.buttons.pressed():
                 self.drivebase.stop()
                 return False
