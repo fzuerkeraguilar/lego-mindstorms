@@ -27,7 +27,7 @@ class BridgeCrosser(Mode):
         if self.drive_up_ramp() == False:
             return False
         self.drivebase.turn(-90)
-        if self.drive_straight(1260) == False:
+        if self.drive_straight(1350) == False:
             return False
         self.drivebase.turn(-90)
         if self.drive_down_ramp() == False:
@@ -35,7 +35,7 @@ class BridgeCrosser(Mode):
 
     def drive_up_ramp(self):
         self.drivebase.reset()
-        while self.drivebase.distance() < self.RAMP_LENGTH + 30: 
+        while self.drivebase.distance() < self.RAMP_LENGTH + 40: 
             if Button.CENTER in self.hub.buttons.pressed():
                 self.drivebase.stop()
                 return False
@@ -81,7 +81,7 @@ class BridgeCrosser(Mode):
                 if distance > 150:
                     self.drivebase.drive(self.DOWN_SPEED, -10)    
                 else:
-                    self.drivebase.drive(self.DOWN_SPEED, 1)
+                    self.drivebase.drive(self.DOWN_SPEED, 3)
         self.drivebase.stop()
 
     def try_to_enter_hole(self):
