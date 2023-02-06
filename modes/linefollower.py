@@ -16,7 +16,7 @@ class LineFollower(Mode):
     LAST_FOUND_RIGHT = True
 
     INITIAL_SPEED = 70
-    TOP_SPEED = 300
+    TOP_SPEED = 180
     SPEED_GAIN = 0.1
     STEP_SIZE = 10
     WAIT_TIME = 5
@@ -74,7 +74,7 @@ class LineFollower(Mode):
                     base_speed = max(self.INITIAL_SPEED, (current_speed * 3) // 4) # reset base to 3/4 of max reached speed
                     current_speed = base_speed
                     self.speed_timer.reset()
-                elif abs(deviation) > (self.THRESHOLD // 4):
+                elif abs(deviation) > (self.THRESHOLD // 5):
                     self.speed_timer.pause() # pause speed increase
                 else:
                     self.speed_timer.resume() # increase speed based on elapsed time since last detour
