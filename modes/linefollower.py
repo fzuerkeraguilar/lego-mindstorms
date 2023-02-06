@@ -16,7 +16,7 @@ class LineFollower(Mode):
     LAST_FOUND_RIGHT = True
 
     INITIAL_SPEED = 50
-    TOP_SPEED = 200
+    TOP_SPEED = 300
     NINETY_TURN_TIME = 575
 
     def __init__(
@@ -54,10 +54,10 @@ class LineFollower(Mode):
                 if not self.find_line_direct():
                     self.bridge_gap()
             else :
-                if abs(deviation) + 1 < self.THRESHOLD // 2:
+                if abs(deviation) < self.THRESHOLD // 2:
                     self.speed = min(self.TOP_SPEED, self.speed + 2)
-                if abs(deviation) - 1 > self.THRESHOLD // 2:
-                    self.speed = max(self.INITIAL_SPEED, self.speed - 7)
+                if abs(deviation) > self.THRESHOLD // 2:
+                    self.speed = max(self.INITIAL_SPEED, self.speed - 5)
 
                 turn_rate = self.GAIN * deviation
                 self.drivebase.drive(self.speed, turn_rate)
@@ -69,11 +69,11 @@ class LineFollower(Mode):
         self.drivebase.turn(90)
         self.drivebase.straight(200)
         self.drivebase.turn(-90)
-        self.drivebase.straight(370)
+        self.drivebase.straight(360)
         self.drivebase.turn(-90)
         self.drivebase.straight(200)
         self.drivebase.turn(90)
-        self.drivebase.straight(-40)
+        self.drivebase.straight(-50)
 
     def turn_and_find_line(self, speed, turn_right, ninety_degrees=1):
         self.drivebase.stop()
@@ -106,7 +106,8 @@ class LineFollower(Mode):
         elif self.turn_and_find_line(800, not self.LAST_FOUND_RIGHT, ninety_degrees=2):
             self.LAST_FOUND_RIGHT = not self.LAST_FOUND_RIGHT
             return True
-        return self.turn_and_find_line(800, self.LAST_FOUND_RIGHT)
+        self.turn_and_find_line(800, self.LAST_FOUND_RIGHT)
+        return False
 
     def bridge_gap(self):
         self.drivebase.reset()

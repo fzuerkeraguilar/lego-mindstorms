@@ -8,7 +8,7 @@ class TurningDistanceSensor:
         self.turn_motor = turn_motor
         self.ultrasonic_sensor = ultrasonic_sensor
         self.speed = speed
-        self.turn_motor.run_until_stalled(-100, Stop.HOLD)
+        self.turn_motor.run_until_stalled(-100, Stop.BRAKE)
         wait(500)
         self.turn_motor.reset_angle(0)
 
@@ -20,9 +20,15 @@ class TurningDistanceSensor:
     def set_up(self):
         self.turn_motor.run_until_stalled(100, then=Stop.HOLD)
 
+    def set_up_soft(self):
+        self.turn_motor.run_until_stalled(100, then=Stop.BRAKE)
+
     def set_down(self):
         self.turn_motor.run_until_stalled(-100, then=Stop.HOLD)
         self.turn_motor.reset_angle(0)
+
+    def set_down_soft(self):
+        self.turn_motor.run_until_stalled(-100, then=Stop.BRAKE)
 
     def measure_angle(self, angle):
         if angle > 90 or angle < -90:

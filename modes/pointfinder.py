@@ -42,10 +42,7 @@ class PointFinder(Mode):
 
     def drive_guided_straight(self, wall_distance_mm):
         current_distance = self.distance_sensor.distance()
-        if current_distance > self.BOX_LENGTH:
-            self.drivebase.drive(self.INITIAL_SPEED, -3)
-            return
-        if current_distance < wall_distance_mm:
+        if current_distance < wall_distance_mm or current_distance > self.BOX_LENGTH:
             self.drivebase.drive(self.INITIAL_SPEED, -3)
         else:
             self.drivebase.drive(self.INITIAL_SPEED, 3)
